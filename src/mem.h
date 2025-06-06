@@ -6,7 +6,7 @@
 #include "devices/rom.h"
 #include <stddef.h>
 
-#define DEV_MEM 0
+#define DEV_RAM 0
 #define DEV_ROM 1
 
 /* Struct that can contain a device */
@@ -26,20 +26,22 @@ typedef struct {
 typedef struct {
     DEVICE *devices;
     size_t dev_count;
-    size_t dev_alloced;
+    size_t dev_allocated;
 } ADDR_SPACE;
 
 
 ADDR_SPACE *addr_init();
+void addr_deinit(ADDR_SPACE *address_space);
 
 void vm_register_device(ADDR_SPACE *address_space, DEVICE dev);
 
+void device_deinit(DEVICE device);
 
-Byte_t vm_read_byte(Word_t address);
-Word_t vm_read_word(Word_t address);
+Byte_t vm_read_byte(ADDR_SPACE *vm, Word_t address);
+Word_t vm_read_word(ADDR_SPACE *vm, Word_t address);
 
-Byte_t vm_write_byte(Word_t address);
-Word_t vm_write_word(Word_t address);
+void vm_write_byte(ADDR_SPACE *vm, Word_t address, Byte_t value);
+void vm_write_word(ADDR_SPACE *vm, Word_t address, Word_t value);
 
 
 

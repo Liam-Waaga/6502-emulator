@@ -6,11 +6,17 @@
 
 
 typedef struct {
-    void *memory;
+    Byte_t *memory;
     size_t size; /* size in bytes */
 } RAM;
 
 RAM *ram_init();
 void ram_deinit(RAM *ram);
+
+Word_t ram_read_word(Ram *ram, Word_t address);
+Byte_t ram_read_byte(Ram *ram, Word_t address);
+
+void ram_write_word(Ram *ram, Word_t address, Word_t value);
+void ram_write_byte(Ram *ram, Word_t address, Byte_t value);
 
 #endif

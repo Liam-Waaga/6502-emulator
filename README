@@ -1,0 +1,8 @@
+# 6502 Emulator written in C, designed to be modular.
+Doesn't support windows, becuase windows programming is paingful, and I don't use windows so I don't care
+
+# NOTES
+- Most of the code has never been run, but it compiles (on linux). Only code actually tested is the log functions
+
+# TODO
+- Implement vm_(read/write)_(byte/word)

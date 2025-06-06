@@ -8,7 +8,7 @@
 #include <stdint.h>
 
 
-struct CPU {
+typedef struct {
     Word_t PC;
     Word_t SP;
     Byte_t Accumulator;
@@ -17,6 +17,12 @@ struct CPU {
     Byte_t STAT;
 
     ADDR_SPACE *address_space;
-};
+} CPU;
+
+CPU *cpu_init(ADDR_SPACE *address_space) {
+    CPU *cpu = malloc(sizeof(CPU));
+    cpu->address_space = address_space;
+    cpu->PC = vm_read_word(0xFFFC);
+}
 
 #endif

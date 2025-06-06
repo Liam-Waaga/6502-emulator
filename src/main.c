@@ -7,7 +7,7 @@
 
 RUNTIME_FLAGS flags;
 
-int main(void) {
+int main(int argc, char *argv, char **envv) {
     flags.ram_size = 0x8000;
     flags.rom_size = 0x8000;
     flags.loglevel = 0;
