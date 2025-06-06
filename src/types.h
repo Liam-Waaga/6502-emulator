@@ -9,6 +9,7 @@ typedef uint16_t Word_t;
 
 struct RUNTIME_FLAGS {
     int ram_size;
+    int rom_size;
 };
 
 
