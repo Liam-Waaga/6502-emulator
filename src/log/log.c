@@ -1,39 +1,74 @@
 
 #include "log.h"
+#include "../types.h"
 
+#include <stdarg.h>
 #include <stdio.h>
 #include <time.h>
 
+extern RUNTIME_FLAGS flags;
 
 
-void log_info(const char *message) {
-    const char format[256];
-    time_t now = time();
+
+void log_info(const char *message, ...) {
+    
+    if (flags.loglevel < 2) {
+        return;
+    }
+
+    va_list args;
+    va_start(args, message);
+    
+    char time_format[256];
+    time_t now = time(NULL);
     struct tm *tm_info = localtime(&now);
 
-    strftime(format, 256, "%m-%d %H:%M:%S: ", tm_info);
+    strftime(time_format, 256, "%m-%d %H:%M:%S", tm_info);
 
-    printf("[INFO] %s:%d %s%s", __FILE__, __LINE__, format, message);
+
+
+    fprintf(stderr, "[INFO] %s: ", time_format);
+    vfprintf(stderr, message, args);
 }
 
 
-void log_warn(const char *message) {
-    const char format[256];
-    time_t now = time();
+void log_warn(const char *message, ...) {
+    if (flags.loglevel < 1) {
+        return;
+    }
+
+    va_list args;
+    va_start(args, message);
+    
+    char time_format[256];
+    time_t now = time(NULL);
     struct tm *tm_info = localtime(&now);
 
-    strftime(format, 256, "%m-%d %H:%M:%S: ", tm_info);
+    strftime(time_format, 256, "%m-%d %H:%M:%S", tm_info);
 
-    printf("[WARN] %s:%d %s%s", __FILE__, __LINE__, format, message);
+
+
+    fprintf(stderr, "[WARN] %s: ", time_format);
+    vfprintf(stderr, message, args);
 }
 
+void log_error(const char *message, ...) {
+    
+    if (flags.loglevel < 0) {
+        return;
+    }
 
-void log_error(const char *message) {
-    const char format[256];
-    time_t now = time();
+    va_list args;
+    va_start(args, message);
+    
+    char time_format[256];
+    time_t now = time(NULL);
     struct tm *tm_info = localtime(&now);
 
-    strftime(format, 256, "%m-%d %H:%M:%S: ", tm_info);
+    strftime(time_format, 256, "%m-%d %H:%M:%S", tm_info);
 
-    printf("[ERROR] %s:%d %s%s", __FILE__, __LINE__, format, message);
+
+
+    fprintf(stderr, "[ERROR] %s: ", time_format);
+    vfprintf(stderr, message, args);
 }

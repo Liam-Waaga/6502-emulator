@@ -4,7 +4,7 @@
 #include "types.h"
 #include "devices/ram.h"
 #include "devices/rom.h"
-#include <cstddef>
+#include <stddef.h>
 
 #define DEV_MEM 0
 #define DEV_ROM 1
@@ -26,11 +26,11 @@ typedef struct {
 typedef struct {
     DEVICE *devices;
     size_t dev_count;
-    size_t dev_alloced
+    size_t dev_alloced;
 } ADDR_SPACE;
 
 
-ADDR_SPACE *addr_init(struct RUNTIME_FLAGS run_flags);
+ADDR_SPACE *addr_init();
 
 void vm_register_device(ADDR_SPACE *address_space, DEVICE dev);
 

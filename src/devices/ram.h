@@ -1,4 +1,5 @@
-
+#ifndef RAM_H
+#define RAM_H
 #include "../types.h"
 
 #include <stddef.h>
@@ -9,5 +10,7 @@ typedef struct {
     size_t size; /* size in bytes */
 } RAM;
 
-RAM *ram_init(struct RUNTIME_FLAGS *flags);
+RAM *ram_init();
 void ram_deinit(RAM *ram);
+
+#endif

@@ -16,7 +16,7 @@ struct CPU {
     Byte_t IndexRegY;
     Byte_t STAT;
 
-    struct ADDR_SPACE *address_space;
+    ADDR_SPACE *address_space;
 };
 
 #endif

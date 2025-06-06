@@ -1,5 +1,5 @@
-#ifndef MAIN_H
-#define MAIN_H
+#ifndef TYPES_H
+#define TYPES_H
 
 #include <stdint.h>
 #include <stddef.h>
@@ -7,10 +7,11 @@
 typedef uint8_t Byte_t;
 typedef uint16_t Word_t;
 
-struct RUNTIME_FLAGS {
-    int ram_size;
+typedef struct {
+    int ram_size; /* in bytes */
     int rom_size;
-};
+    int loglevel; /* 0 for error, 1 for warn, 2 for info */
+} RUNTIME_FLAGS;
 
 
 #endif
