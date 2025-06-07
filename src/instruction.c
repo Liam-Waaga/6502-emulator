@@ -1,10 +1,16 @@
 #include "instruction.h"
+#include "cpu.h"
 #include "log/log.h"
+#include "mem.h"
 
 #include <stdlib.h>
 
 void execute_instruction(CPU *cpu, unsigned char opcode) {
     switch (opcode) {
+        case 0x69:
+            ADC_IM(cpu);
+            break;
+        
         default:
             log_error("Opcode '%x' not found", opcode);
             exit(1);
@@ -16,7 +22,20 @@ void execute_instruction(CPU *cpu, unsigned char opcode) {
 /* ADC */
 
 void ADC_IM(CPU *cpu) {
-    log_error("Unimplemented, %s:%d", __FILE__, __LINE__);
+    int operand = vm_read_byte(cpu->address_space, cpu->PC + 1);
+    int result = cpu->Accumulator + (cpu->STAT & CARRY_BIT) + operand;
+    
+    if (result > 0xff) {
+        cpu->STAT = cpu->STAT | CARRY_BIT;
+    }
+
+    result = result & 0xff;
+
+    if ((~(cpu->Accumulator ^ operand) & (cpu->Accumulator ^ result)) & 0x80) {
+        cpu->STAT = cpu->STAT | OVERFLOW_BIT;
+    }
+
+    cpu->Accumulator = (Byte_t) result;
 };
 void ADC_ZP(CPU *cpu) {
     log_error("Unimplemented, %s:%d", __FILE__, __LINE__);

@@ -1,3 +1,7 @@
+#ifndef INSTRUCTION_H
+#define INSTRUCTION_H
+
+
 #include "cpu.h"
 
 void execute_instruction(CPU *cpu, unsigned char opcode);
@@ -373,3 +377,6 @@ void TXS_I(CPU *cpu);
 /* TYA */
 
 void TYA_I(CPU *cpu);
+
+
+#endif
