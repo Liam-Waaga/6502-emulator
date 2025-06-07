@@ -4,10 +4,13 @@
 #include "types.h"
 #include "devices/ram.h"
 #include "devices/rom.h"
+
 #include <stddef.h>
 
-#define DEV_RAM 0
-#define DEV_ROM 1
+typedef enum {
+    DEV_ROM,
+    DEV_RAM,
+} DEV_TYPE;
 
 /* Struct that can contain a device */
 typedef struct {
@@ -17,9 +20,8 @@ typedef struct {
         ROM *rom;
     } device;
     Word_t address_begin;
-    Word_t address_end; /* not inclusive, if you access address end, and anothers address begin is 
-                           the same value, it accesses the other device */
-    int type;
+    Word_t address_end; /* not inclusive */
+    DEV_TYPE type;
 } DEVICE;
 
 

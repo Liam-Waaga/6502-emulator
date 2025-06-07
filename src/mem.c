@@ -3,6 +3,7 @@
 #include "log/log.h"
 #include "types.h"
 
+#include <stddef.h>
 #include <stdlib.h>
 
 extern RUNTIME_FLAGS flags;
@@ -47,11 +48,6 @@ void vm_register_device(ADDR_SPACE *address_space, DEVICE device) {
     log_info("Registered device");
 }
 
-void addr_deinit(ADDR_SPACE *address_space) {
-    for (size_t i = 0; i < address_space->dev_count; i++) {
-        device_deinit(address_space->devices[i]);
-    }
-}
 
 void device_deinit(DEVICE device) {
     switch (device.type) {
@@ -62,4 +58,55 @@ void device_deinit(DEVICE device) {
             rom_deinit(device.device.rom);
             break;
     }
+}
+
+
+void addr_deinit(ADDR_SPACE *address_space) {
+    for (size_t i = 0; i < address_space->dev_count; i++) {
+        device_deinit(address_space->devices[i]);
+    }
+}
+
+
+Word_t vm_read_word(ADDR_SPACE *vm, Word_t address) {
+    log_error("Unimplemented, %s:%d", __FILE__, __LINE__);
+    exit(1);
+}
+
+Byte_t vm_read_byte(ADDR_SPACE *vm, Word_t address) {
+    DEVICE *dev = NULL;
+    for (size_t i = 0; i < vm->dev_count; i++) {
+        if (address >= vm->devices[i].address_begin &&
+            address < vm->devices[i].address_end) {
+            dev = &vm->devices[i];
+        }
+    }
+
+    if (dev == NULL) {
+        log_error("Tried to access memory address %d, but found no device asscodiated with it", address);
+        exit(1);        
+    }
+
+    switch (dev->type) {
+        case DEV_ROM:
+            return rom_read_byte(dev->device.rom, address - dev->address_begin);
+            break;
+        case DEV_RAM:
+            return ram_read_byte(dev->device.ram, address - dev->address_begin);
+            break;
+        default: 
+            log_error("Device accessed of unknown type (%d)", dev->type);
+            break;
+    }
+
+
+}
+
+void vm_write_byte(ADDR_SPACE *vm, Word_t address, Byte_t value) {
+    log_error("Unimplemented, %s:%d", __FILE__, __LINE__);
+    exit(1);
+}
+void vm_write_word(ADDR_SPACE *vm, Word_t address, Word_t value) {
+    log_error("Unimplemented, %s:%d", __FILE__, __LINE__);
+    exit(1);
 }

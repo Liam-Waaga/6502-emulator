@@ -16,7 +16,7 @@ ROM *rom_init(const char *path);
 
 void rom_deinit(ROM *rom);
 
-Word_t rom_read_word(Word_t address);
-Byte_t rom_read_byte(Word_t address);
+Word_t rom_read_word(ROM *rom, Word_t address);
+Byte_t rom_read_byte(ROM *rom, Word_t address);
 
 #endif

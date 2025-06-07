@@ -19,10 +19,6 @@ typedef struct {
     ADDR_SPACE *address_space;
 } CPU;
 
-CPU *cpu_init(ADDR_SPACE *address_space) {
-    CPU *cpu = malloc(sizeof(CPU));
-    cpu->address_space = address_space;
-    cpu->PC = vm_read_word(0xFFFC);
-}
+CPU *cpu_init(ADDR_SPACE *address_space);
 
 #endif

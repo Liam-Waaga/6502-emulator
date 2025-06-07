@@ -13,10 +13,10 @@ typedef struct {
 RAM *ram_init();
 void ram_deinit(RAM *ram);
 
-Word_t ram_read_word(Ram *ram, Word_t address);
-Byte_t ram_read_byte(Ram *ram, Word_t address);
+Word_t ram_read_word(RAM *ram, Word_t address);
+Byte_t ram_read_byte(RAM *ram, Word_t address);
 
-void ram_write_word(Ram *ram, Word_t address, Word_t value);
-void ram_write_byte(Ram *ram, Word_t address, Byte_t value);
+void ram_write_word(RAM *ram, Word_t address, Word_t value);
+void ram_write_byte(RAM *ram, Word_t address, Byte_t value);
 
 #endif

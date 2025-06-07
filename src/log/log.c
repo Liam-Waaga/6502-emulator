@@ -29,6 +29,7 @@ void log_info(const char *message, ...) {
 
     fprintf(stderr, "[INFO] %s: ", time_format);
     vfprintf(stderr, message, args);
+    fprintf(stderr, "\n");
 }
 
 
@@ -50,6 +51,7 @@ void log_warn(const char *message, ...) {
 
     fprintf(stderr, "[WARN] %s: ", time_format);
     vfprintf(stderr, message, args);
+    fprintf(stderr, "\n");
 }
 
 void log_error(const char *message, ...) {
@@ -71,4 +73,5 @@ void log_error(const char *message, ...) {
 
     fprintf(stderr, "[ERROR] %s: ", time_format);
     vfprintf(stderr, message, args);
+    fprintf(stderr, "\n");
 }
