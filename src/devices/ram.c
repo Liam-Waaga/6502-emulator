@@ -24,7 +24,7 @@ Word_t ram_read_word(RAM *ram, Word_t address) {
         log_error("attempted to access ram memory at address %d with ram size %d, %s:%d", address, ram->size, __FILE__, __LINE__);
         exit(1);
     }
-    return (Word_t) *(ram->memory + address) | *(ram->memory + address + 1) << 8;
+    return (Word_t) *(ram->memory + address) | (*(ram->memory + address + 1) << 8);
 }
 
 Byte_t ram_read_byte(RAM *ram, Word_t address) {

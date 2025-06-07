@@ -39,7 +39,7 @@ Word_t rom_read_word(ROM *rom, Word_t address) {
         log_error("Attempted to read from nonexistant address %d, size is %d, %s:%d", address, rom->size, __FILE__, __LINE__);
         exit(1);
     }
-    return (Word_t) *(rom->data + address) | *(rom->data + address + 1) << 8;
+    return (Word_t) *(rom->data + address) | (*(rom->data + address + 1) << 8);
 
 }
 

@@ -69,8 +69,7 @@ void addr_deinit(ADDR_SPACE *address_space) {
 
 
 Word_t vm_read_word(ADDR_SPACE *vm, Word_t address) {
-    log_error("Unimplemented, %s:%d", __FILE__, __LINE__);
-    exit(1);
+    return (Word_t) vm_read_byte(vm, address) | (vm_read_byte(vm, address) << 8);
 }
 
 Byte_t vm_read_byte(ADDR_SPACE *vm, Word_t address) {
@@ -98,15 +97,35 @@ Byte_t vm_read_byte(ADDR_SPACE *vm, Word_t address) {
             log_error("Device accessed of unknown type (%d)", dev->type);
             break;
     }
-
-
 }
 
 void vm_write_byte(ADDR_SPACE *vm, Word_t address, Byte_t value) {
-    log_error("Unimplemented, %s:%d", __FILE__, __LINE__);
-    exit(1);
+    DEVICE *dev = NULL;
+    for (size_t i = 0; i < vm->dev_count; i++) {
+        if (address >= vm->devices[i].address_begin &&
+            address < vm->devices[i].address_end) {
+            dev = &vm->devices[i];
+        }
+    }
+
+    if (dev == NULL) {
+        log_error("Tried to access memory address %d, but found no device asscodiated with it", address);
+        exit(1);        
+    }
+
+    switch (dev->type) {
+        case DEV_ROM:
+            log_error("Tried to write to ROM at address %d", address);
+            break;
+        case DEV_RAM:
+            ram_write_byte(dev->device.ram, address - dev->address_begin, value);
+            break;
+        default: 
+            log_error("Device accessed of unknown type (%d)", dev->type);
+            break;
+    }    
 }
 void vm_write_word(ADDR_SPACE *vm, Word_t address, Word_t value) {
-    log_error("Unimplemented, %s:%d", __FILE__, __LINE__);
-    exit(1);
+    vm_write_byte(vm, address, (Byte_t) value >> 8);
+    vm_write_byte(vm, address + 1, (Byte_t) value);
 }
