@@ -1,16 +1,12 @@
 #ifndef MEM_H
 #define MEM_H
 
+#include "parcer.h"
 #include "types.h"
 #include "devices/ram.h"
 #include "devices/rom.h"
 
 #include <stddef.h>
-
-typedef enum {
-    DEV_ROM,
-    DEV_RAM,
-} DEV_TYPE;
 
 /* Struct that can contain a device */
 typedef struct {
@@ -32,7 +28,7 @@ typedef struct {
 } ADDR_SPACE;
 
 
-ADDR_SPACE *addr_init();
+ADDR_SPACE *addr_init(PARCER_DEVICE *device_arr);
 void addr_deinit(ADDR_SPACE *address_space);
 
 void vm_register_device(ADDR_SPACE *address_space, DEVICE dev);

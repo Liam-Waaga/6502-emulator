@@ -1,7 +1,6 @@
 #ifndef PARCER_H
 #define PARCER_H
 
-#include "mem.h"
 #include "types.h"
 
 struct ROM_OPTS {

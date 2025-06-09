@@ -10,7 +10,7 @@ typedef struct {
     size_t size; /* size in bytes */
 } RAM;
 
-RAM *ram_init();
+RAM *ram_init(int size);
 void ram_deinit(RAM *ram);
 
 Word_t ram_read_word(RAM *ram, Word_t address);

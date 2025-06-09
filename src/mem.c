@@ -1,6 +1,7 @@
 #include "mem.h"
 #include "devices/ram.h"
 #include "log/log.h"
+#include "parcer.h"
 #include "types.h"
 
 #include <stddef.h>
@@ -8,20 +9,25 @@
 
 extern RUNTIME_FLAGS flags;
 
-ADDR_SPACE *addr_init() {
+ADDR_SPACE *addr_init(PARCER_DEVICE *device_arr) {
     ADDR_SPACE *addr_space = (ADDR_SPACE *) malloc(sizeof(ADDR_SPACE));
     addr_space->devices = NULL;
     addr_space->dev_count = 0;
     addr_space->dev_allocated = 0;
 
-    DEVICE ram;
-    ram.device.ram = ram_init();
-    ram.type = DEV_RAM;
-    ram.address_begin = 0;
-    ram.address_end = flags.ram_size - 1;
+    for (size_t i = 0; !device_arr[i].isArrayEnd; i++) {
+        DEVICE dev;
+        dev.address_begin = device_arr[i].address_begin;
+        dev.address_end = device_arr[i].address_end;
+        dev.type = device_arr[i].type;
 
-    vm_register_device(addr_space, ram);
-    /* TODO, register ROM once rom is implemented */
+        switch (dev.type) {
+            case DEV_RAM:
+                dev.device.ram = ram_init(dev.address_end - dev.address_begin + 1);
+                break;
+            case DEV_ROM:
+        }
+    }
 
     return addr_space;
 }

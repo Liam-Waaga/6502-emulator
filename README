@@ -4,3 +4,16 @@ Doesn't support windows, becuase windows programming is paingful, and I don't us
 # NOTES
 - Most of the code has never been run, but it compiles (on linux). Only code actually tested is the log functions
 - When writing new devices, add options to parser(.h/.c) (add to device struct)
+
+
+Example config file
+I know it looks like toml, but its only kind of, and definitely doesn't have all the features of toml
+
+```fake toml
+[system]
+clock_speed = 1000000
+loglevel = 0 # 0 = error, 1 = warn, 2 = info
+
+[ram]
+# todo, finish example
+```
