@@ -99,7 +99,10 @@ PARCER_DEVICE *parce_file(const char *path) {
     DEV_TYPE type;
 
     PARCER_DEVICE *dev_settings_arr = malloc(sizeof(PARCER_DEVICE));
-    PARCER_DEVICE dev;
+    size_t dev_arr_used = 0;
+    size_t dev_arr_allocated = 1;
+    PARCER_DEVICE device;
+
     if (dev_settings_arr == NULL) {
         log_error("Allocation error, %s:%d", __FILE__, __LINE__);
         exit(1);
@@ -114,15 +117,25 @@ PARCER_DEVICE *parce_file(const char *path) {
     size_t line = 0;
 
     while (fgets(buff, sizeof(buff), config)) {
+        line++;
         if (!strchr(buff, '\n') && !feof(config))
             log_error("Line %d is too long in \"%s\"", line, path);
-
-        line++;
-        for (int i = 0; section_specifiers[i] != NULL; i++) {
-            if (strcmp(section_specifiers[i], buff) == 0) {
-                section_specifier = i;
-                goto LOOP_END;
+        if (buff[0] == '[') {
+            for (int i = 0; section_specifiers[i] != NULL; i++) {
+                if (strcmp(section_specifiers[i], buff) == 0) {
+                    section_specifier = i;
+                    goto LOOP_END;
+                }
             }
+            if (dev_arr_used == dev_arr_allocated) {
+                PARCER_DEVICE *tmp = realloc(dev_settings_arr, sizeof(PARCER_DEVICE) * (dev_arr_allocated *= 2));
+                if (tmp == NULL) {
+                    log_error("realloc fail at %s:%d", __FILE__, __LINE__);
+                    exit(1);
+                }
+                dev_settings_arr = tmp;
+            }
+            dev_settings_arr[dev_arr_used++] = device;
         }
         switch (section_specifier) {
             case 0:
@@ -164,7 +177,13 @@ PARCER_DEVICE *parce_file(const char *path) {
 
                 switch (option_specifier) {
                     case 0:
-                        log_error("Unimplemented, %s:%d", __FILE__, __LINE__);
+                        nothing();
+                        int num = get_uint_from_buff(value_position);
+                        if (num == -1) {
+                            log_error("Invalid value for address_begin at %s:%d", path, line);
+                            exit(1);
+                        }
+
                 }
         }
 
