@@ -1,6 +1,12 @@
 #ifndef TYPES_H
 #define TYPES_H
 
+#if __WIN32
+#error Win32 not supported, remove once I decide that the win32 api is worth the pain
+#endif
+
+
+
 #include <stdint.h>
 #include <stddef.h>
 

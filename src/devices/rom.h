@@ -5,7 +5,7 @@
 #include <stddef.h>
 
 struct ROM_OPTS {
-    char *path;
+    const char *path;
 };
 
 typedef struct {

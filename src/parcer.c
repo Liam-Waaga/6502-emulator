@@ -4,6 +4,7 @@
 
 #include <stddef.h>
 #include <stdio.h>
+#include <unistd.h>
 #include <stdlib.h>
 #include <string.h>
 
@@ -26,7 +27,7 @@ struct SECTION_OPTIONS {
 
 
 void print_parcer_dev_arr(PARCER_DEVICE *arr) {
-    for (size_t i = 0; !arr[i].isArrayEnd; i++) {
+    for (size_t i = 0; ; i++) {
         printf("Name = \"%s\", DEV_TYPE = %d, Address_Begin = %d, Address_End = %d", arr[i].name, arr[i].type, arr[i].address_begin, arr[i].address_end);
         switch (arr[i].type) {
             case DEV_NONE:
@@ -39,6 +40,9 @@ void print_parcer_dev_arr(PARCER_DEVICE *arr) {
             case DEV_RAM:
                 printf("\n");
                 break;
+        }
+        if (arr[i].isArrayEnd) {
+            break;
         }
     }
 }
@@ -153,7 +157,7 @@ char *get_string_from_buff(const char *buff) {
 
     output = malloc(out_capacity);
     if (!output) {
-        fprintf(stderr, "Allocation failed\n");
+        log_error("Allocation failed at %s:%d", __FILE__, __LINE__);
         exit(1);
     }
 
@@ -314,8 +318,18 @@ PARCER_DEVICE *parce_file(const char *path) {
                     }
                     dev_settings_arr = tmp;
                 }
+
+                /* set some device defaults */
+                if (device.type == DEV_ROM) {
+                    if (device.dev_opts.rom_opts.path == NULL){
+                        char const *def_path = "rom.bin";
+                        device.dev_opts.rom_opts.path = malloc(strlen(def_path) + 1)
+                        strncpy(device.dev_opts.rom_opts.path, def_path, strlen(def_path) + 1);
+                    }
+                }
                 device.isArrayEnd = 0;
                 dev_settings_arr[dev_arr_used++] = device;
+                memset(&device, 0, sizeof(PARCER_DEVICE));
             }
         }
         
@@ -396,10 +410,38 @@ PARCER_DEVICE *parce_file(const char *path) {
                 break;
             }
             case 2: {
+                is_making_device = section_options.sections[2].is_device;
                 device.type = DEV_ROM;
 
-                log_error("Unimplemented, %s:%d, %s:%d", path, line, __FILE__, __LINE__);
-                exit(1);
+                switch (option_specifier) {
+                    case 0: {
+                            num = get_uint_from_buff(value_position);
+                            if (num == -1) {
+                                log_error("Invalid value for address_begin at %s:%d", path, line)
+                                exit(1);
+                            }
+                            device.address_begin = num;
+                        break;
+                    }
+                    case 1: {
+                            num = get_uint_from_buff(value_position);
+                            if (num == -1) {
+                                log_error("Invalid value for address_begin at %s:%d", path, line)
+                                exit(1);
+                            }
+                            device.address_end = num;
+                        break;
+                    }
+                    case 2: {
+                            const char *rom_path = get_string_from_buff(value_position);
+                            if (access(rom_path, F_OK)) {
+                                log_error("ROM File not fount at \"%s\"", rom_path);
+                                exit(1);
+                            }
+                            device.dev_opts.rom_opts.path = rom_path;
+                        break;
+                    }
+                }
                 break;
             }
         }
@@ -408,7 +450,21 @@ PARCER_DEVICE *parce_file(const char *path) {
         nothing();
     }
 
-    dev_settings_arr[dev_arr_used].isArrayEnd = 1;
+    dev_settings_arr[dev_arr_used - 1].isArrayEnd = 1;
     
     return dev_settings_arr;
+}
+
+
+void free_parcer_dev_arr(PARCER_DEVICE *arr) {
+    for (size_t i = 0; ; i++) {
+        if (arr[i].type == DEV_ROM) {
+            free(arr[i].dev_opts.rom_opts.path);
+        }
+
+        if (arr[i].isArrayEnd) {
+            break;
+        }
+    }
+    free(arr);
 }

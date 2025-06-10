@@ -7,7 +7,6 @@
 
 /* used as part of an array */
 typedef struct {
-    char *name;
     DEV_TYPE type;
     Word_t address_begin;
     Word_t address_end;
@@ -17,7 +16,6 @@ typedef struct {
     } dev_opts;
     int isArrayEnd;
 } PARCER_DEVICE;
-
 
 PARCER_DEVICE *parce_file(const char *path);
 
