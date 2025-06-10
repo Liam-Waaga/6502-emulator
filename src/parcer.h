@@ -2,10 +2,8 @@
 #define PARCER_H
 
 #include "types.h"
-
-struct ROM_OPTS {
-    char *path;
-};
+#include "devices/ram.h"
+#include "devices/rom.h"
 
 /* used as part of an array */
 typedef struct {
@@ -24,5 +22,7 @@ typedef struct {
 PARCER_DEVICE *parce_file(const char *path);
 
 void free_parcer_dev_arr(PARCER_DEVICE *arr);
+
+void print_parcer_dev_arr(PARCER_DEVICE *arr);
 
 #endif

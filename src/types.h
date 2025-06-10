@@ -13,6 +13,7 @@ typedef struct {
 } RUNTIME_FLAGS;
 
 typedef enum {
+    DEV_NONE,
     DEV_ROM,
     DEV_RAM,
 } DEV_TYPE;

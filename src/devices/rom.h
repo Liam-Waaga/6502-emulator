@@ -4,6 +4,9 @@
 
 #include <stddef.h>
 
+struct ROM_OPTS {
+    char *path;
+};
 
 typedef struct {
     int fd; /* file on disc */

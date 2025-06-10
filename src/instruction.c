@@ -39,27 +39,35 @@ void ADC_IM(CPU *cpu) {
 };
 void ADC_ZP(CPU *cpu) {
     log_error("Unimplemented, %s:%d", __FILE__, __LINE__);
+    exit(1);
 };
 void ADC_ZPX(CPU *cpu) {
     log_error("Unimplemented, %s:%d", __FILE__, __LINE__);
+    exit(1);
 };
 void ADC_ZPY(CPU *cpu) {
     log_error("Unimplemented, %s:%d", __FILE__, __LINE__);
+    exit(1);
 };
 void ADC_A(CPU *cpu) {
     log_error("Unimplemented, %s:%d", __FILE__, __LINE__);
+    exit(1);
 }
 void ADC_AX(CPU *cpu) {
     log_error("Unimplemented, %s:%d", __FILE__, __LINE__);
+    exit(1);
 };
 void ADC_AY(CPU *cpu) {
     log_error("Unimplemented, %s:%d", __FILE__, __LINE__);
+    exit(1);
 };
 void ADC_INX(CPU *cpu) {
     log_error("Unimplemented, %s:%d", __FILE__, __LINE__);
+    exit(1);
 };
 void ADC_INY(CPU *cpu) {
     log_error("Unimplemented, %s:%d", __FILE__, __LINE__);
+    exit(1);
 };
 
 
@@ -67,30 +75,39 @@ void ADC_INY(CPU *cpu) {
 
 void AND_IM(CPU *cpu) {
     log_error("Unimplemented, %s:%d", __FILE__, __LINE__);
+    exit(1);
 };
 void AND_ZP(CPU *cpu) {
     log_error("Unimplemented, %s:%d", __FILE__, __LINE__);
+    exit(1);
 };
 void AND_ZPX(CPU *cpu) {
     log_error("Unimplemented, %s:%d", __FILE__, __LINE__);
+    exit(1);
 };
 void AND_ZPY(CPU *cpu) {
     log_error("Unimplemented, %s:%d", __FILE__, __LINE__);
+    exit(1);
 };
 void AND_A(CPU *cpu) {
     log_error("Unimplemented, %s:%d", __FILE__, __LINE__);
+    exit(1);
 }
 void AND_AX(CPU *cpu) {
     log_error("Unimplemented, %s:%d", __FILE__, __LINE__);
+    exit(1);
 };
 void AND_AY(CPU *cpu) {
     log_error("Unimplemented, %s:%d", __FILE__, __LINE__);
+    exit(1);
 };
 void AND_INX(CPU *cpu) {
     log_error("Unimplemented, %s:%d", __FILE__, __LINE__);
+    exit(1);
 };
 void AND_INY(CPU *cpu) {
     log_error("Unimplemented, %s:%d", __FILE__, __LINE__);
+    exit(1);
 };
 
 
@@ -98,18 +115,23 @@ void AND_INY(CPU *cpu) {
 
 void ADL_AC(CPU *cpu) {
     log_error("Unimplemented, %s:%d", __FILE__, __LINE__);
+    exit(1);
 };
 void ADL_ZP(CPU *cpu) {
     log_error("Unimplemented, %s:%d", __FILE__, __LINE__);
+    exit(1);
 };
 void ADL_ZPX(CPU *cpu) {
     log_error("Unimplemented, %s:%d", __FILE__, __LINE__);
+    exit(1);
 };
 void ADL_A(CPU *cpu) {
     log_error("Unimplemented, %s:%d", __FILE__, __LINE__);
+    exit(1);
 }
 void ADL_AX(CPU *cpu) {
     log_error("Unimplemented, %s:%d", __FILE__, __LINE__);
+    exit(1);
 };
 
 
@@ -117,6 +139,7 @@ void ADL_AX(CPU *cpu) {
 
 void BCC_R(CPU *cpu) {
     log_error("Unimplemented, %s:%d", __FILE__, __LINE__);
+    exit(1);
 }
 
 
@@ -124,6 +147,7 @@ void BCC_R(CPU *cpu) {
 
 void BCS_R(CPU *cpu) {
     log_error("Unimplemented, %s:%d", __FILE__, __LINE__);
+    exit(1);
 }
 
 
@@ -131,6 +155,7 @@ void BCS_R(CPU *cpu) {
 
 void BEQ_R(CPU *cpu) {
     log_error("Unimplemented, %s:%d", __FILE__, __LINE__);
+    exit(1);
 }
 
 
@@ -138,9 +163,11 @@ void BEQ_R(CPU *cpu) {
 
 void BIT_ZP(CPU *cpu) {
     log_error("Unimplemented, %s:%d", __FILE__, __LINE__);
+    exit(1);
 };
 void BIT_A(CPU *cpu) {
     log_error("Unimplemented, %s:%d", __FILE__, __LINE__);
+    exit(1);
 }
 
 
@@ -148,6 +175,7 @@ void BIT_A(CPU *cpu) {
 
 void BMI_R(CPU *cpu) {
     log_error("Unimplemented, %s:%d", __FILE__, __LINE__);
+    exit(1);
 }
 
 
@@ -155,6 +183,7 @@ void BMI_R(CPU *cpu) {
 
 void BNE_R(CPU *cpu) {
     log_error("Unimplemented, %s:%d", __FILE__, __LINE__);
+    exit(1);
 }
 
 
@@ -162,6 +191,7 @@ void BNE_R(CPU *cpu) {
 
 void BPL_R(CPU *cpu) {
     log_error("Unimplemented, %s:%d", __FILE__, __LINE__);
+    exit(1);
 }
 
 
@@ -169,6 +199,7 @@ void BPL_R(CPU *cpu) {
 
 void BRK_R(CPU *cpu) {
     log_error("Unimplemented, %s:%d", __FILE__, __LINE__);
+    exit(1);
 }
 
 
@@ -176,6 +207,7 @@ void BRK_R(CPU *cpu) {
 
 void BVC_R(CPU *cpu) {
     log_error("Unimplemented, %s:%d", __FILE__, __LINE__);
+    exit(1);
 }
 
 
@@ -183,6 +215,7 @@ void BVC_R(CPU *cpu) {
 
 void BVS_R(CPU *cpu) {
     log_error("Unimplemented, %s:%d", __FILE__, __LINE__);
+    exit(1);
 }
 
 
@@ -190,6 +223,7 @@ void BVS_R(CPU *cpu) {
 
 void CLC_I(CPU *cpu) {
     log_error("Unimplemented, %s:%d", __FILE__, __LINE__);
+    exit(1);
 }
 
 
@@ -197,6 +231,7 @@ void CLC_I(CPU *cpu) {
 
 void CLD_I(CPU *cpu) {
     log_error("Unimplemented, %s:%d", __FILE__, __LINE__);
+    exit(1);
 }
 
 
@@ -204,6 +239,7 @@ void CLD_I(CPU *cpu) {
 
 void CLI_I(CPU *cpu) {
     log_error("Unimplemented, %s:%d", __FILE__, __LINE__);
+    exit(1);
 }
 
 
@@ -211,6 +247,7 @@ void CLI_I(CPU *cpu) {
 
 void CLV_I(CPU *cpu) {
     log_error("Unimplemented, %s:%d", __FILE__, __LINE__);
+    exit(1);
 }
 
 
@@ -218,27 +255,35 @@ void CLV_I(CPU *cpu) {
 
 void CMP_IM(CPU *cpu) {
     log_error("Unimplemented, %s:%d", __FILE__, __LINE__);
+    exit(1);
 };
 void CMP_ZP(CPU *cpu) {
     log_error("Unimplemented, %s:%d", __FILE__, __LINE__);
+    exit(1);
 };
 void CMP_ZPX(CPU *cpu) {
     log_error("Unimplemented, %s:%d", __FILE__, __LINE__);
+    exit(1);
 };
 void CMP_A(CPU *cpu) {
     log_error("Unimplemented, %s:%d", __FILE__, __LINE__);
+    exit(1);
 }
 void CMP_AX(CPU *cpu) {
     log_error("Unimplemented, %s:%d", __FILE__, __LINE__);
+    exit(1);
 };
 void CMP_AY(CPU *cpu) {
     log_error("Unimplemented, %s:%d", __FILE__, __LINE__);
+    exit(1);
 };
 void CMP_INX(CPU *cpu) {
     log_error("Unimplemented, %s:%d", __FILE__, __LINE__);
+    exit(1);
 };
 void CMP_INY(CPU *cpu) {
     log_error("Unimplemented, %s:%d", __FILE__, __LINE__);
+    exit(1);
 };
 
 
@@ -246,12 +291,15 @@ void CMP_INY(CPU *cpu) {
 
 void CPX_IM(CPU *cpu) {
     log_error("Unimplemented, %s:%d", __FILE__, __LINE__);
+    exit(1);
 };
 void CPX_ZP(CPU *cpu) {
     log_error("Unimplemented, %s:%d", __FILE__, __LINE__);
+    exit(1);
 };
 void CPX_A(CPU *cpu) {
     log_error("Unimplemented, %s:%d", __FILE__, __LINE__);
+    exit(1);
 }
 
 
@@ -259,12 +307,15 @@ void CPX_A(CPU *cpu) {
 
 void CPY_IM(CPU *cpu) {
     log_error("Unimplemented, %s:%d", __FILE__, __LINE__);
+    exit(1);
 };
 void CPY_ZP(CPU *cpu) {
     log_error("Unimplemented, %s:%d", __FILE__, __LINE__);
+    exit(1);
 };
 void CPY_A(CPU *cpu) {
     log_error("Unimplemented, %s:%d", __FILE__, __LINE__);
+    exit(1);
 }
 
 
@@ -272,15 +323,19 @@ void CPY_A(CPU *cpu) {
 
 void DEC_ZP(CPU *cpu) {
     log_error("Unimplemented, %s:%d", __FILE__, __LINE__);
+    exit(1);
 };
 void DEC_ZPX(CPU *cpu) {
     log_error("Unimplemented, %s:%d", __FILE__, __LINE__);
+    exit(1);
 };
 void DEC_A(CPU *cpu) {
     log_error("Unimplemented, %s:%d", __FILE__, __LINE__);
+    exit(1);
 }
 void DEC_AX(CPU *cpu) {
     log_error("Unimplemented, %s:%d", __FILE__, __LINE__);
+    exit(1);
 };
 
 
@@ -288,6 +343,7 @@ void DEC_AX(CPU *cpu) {
 
 void DEX_I(CPU *cpu) {
     log_error("Unimplemented, %s:%d", __FILE__, __LINE__);
+    exit(1);
 }
 
 
@@ -295,6 +351,7 @@ void DEX_I(CPU *cpu) {
 
 void DEY_I(CPU *cpu) {
     log_error("Unimplemented, %s:%d", __FILE__, __LINE__);
+    exit(1);
 }
 
 
@@ -302,27 +359,35 @@ void DEY_I(CPU *cpu) {
 
 void EOR_IM(CPU *cpu) {
     log_error("Unimplemented, %s:%d", __FILE__, __LINE__);
+    exit(1);
 };
 void EOR_ZP(CPU *cpu) {
     log_error("Unimplemented, %s:%d", __FILE__, __LINE__);
+    exit(1);
 };
 void EOR_ZPX(CPU *cpu) {
     log_error("Unimplemented, %s:%d", __FILE__, __LINE__);
+    exit(1);
 };
 void EOR_A(CPU *cpu) {
     log_error("Unimplemented, %s:%d", __FILE__, __LINE__);
+    exit(1);
 }
 void EOR_AX(CPU *cpu) {
     log_error("Unimplemented, %s:%d", __FILE__, __LINE__);
+    exit(1);
 };
 void EOR_AY(CPU *cpu) {
     log_error("Unimplemented, %s:%d", __FILE__, __LINE__);
+    exit(1);
 };
 void EOR_INX(CPU *cpu) {
     log_error("Unimplemented, %s:%d", __FILE__, __LINE__);
+    exit(1);
 };
 void EOR_INY(CPU *cpu) {
     log_error("Unimplemented, %s:%d", __FILE__, __LINE__);
+    exit(1);
 };
 
 
@@ -330,15 +395,19 @@ void EOR_INY(CPU *cpu) {
 
 void INC_ZP(CPU *cpu) {
     log_error("Unimplemented, %s:%d", __FILE__, __LINE__);
+    exit(1);
 };
 void INC_ZPX(CPU *cpu) {
     log_error("Unimplemented, %s:%d", __FILE__, __LINE__);
+    exit(1);
 };
 void INC_A(CPU *cpu) {
     log_error("Unimplemented, %s:%d", __FILE__, __LINE__);
+    exit(1);
 }
 void INC_AX(CPU *cpu) {
     log_error("Unimplemented, %s:%d", __FILE__, __LINE__);
+    exit(1);
 };
 
 
@@ -346,6 +415,7 @@ void INC_AX(CPU *cpu) {
 
 void INX_I(CPU *cpu) {
     log_error("Unimplemented, %s:%d", __FILE__, __LINE__);
+    exit(1);
 }
 
 
@@ -353,6 +423,7 @@ void INX_I(CPU *cpu) {
 
 void INY_I(CPU *cpu) {
     log_error("Unimplemented, %s:%d", __FILE__, __LINE__);
+    exit(1);
 }
 
 
@@ -360,9 +431,11 @@ void INY_I(CPU *cpu) {
 
 void JMP_A(CPU *cpu) {
     log_error("Unimplemented, %s:%d", __FILE__, __LINE__);
+    exit(1);
 }
 void JMP_IN(CPU *cpu) {
     log_error("Unimplemented, %s:%d", __FILE__, __LINE__);
+    exit(1);
 };
 
 
@@ -370,6 +443,7 @@ void JMP_IN(CPU *cpu) {
 
 void JSR_A(CPU *cpu) {
     log_error("Unimplemented, %s:%d", __FILE__, __LINE__);
+    exit(1);
 }
 
 
@@ -377,24 +451,31 @@ void JSR_A(CPU *cpu) {
 
 void LDA_IM(CPU *cpu) {
     log_error("Unimplemented, %s:%d", __FILE__, __LINE__);
+    exit(1);
 };
 void LDA_ZP(CPU *cpu) {
     log_error("Unimplemented, %s:%d", __FILE__, __LINE__);
+    exit(1);
 };
 void LDA_ZPX(CPU *cp) {
     log_error("Unimplemented, %s:%d", __FILE__, __LINE__);
+    exit(1);
 };
 void LDA_A(CPU *cpu) {
     log_error("Unimplemented, %s:%d", __FILE__, __LINE__);
+    exit(1);
 }
 void LDA_AX(CPU *cpu) {
     log_error("Unimplemented, %s:%d", __FILE__, __LINE__);
+    exit(1);
 };
 void LDA_INX(CPU *cpu) {
     log_error("Unimplemented, %s:%d", __FILE__, __LINE__);
+    exit(1);
 };
 void LDA_INY(CPU *cpu) {
     log_error("Unimplemented, %s:%d", __FILE__, __LINE__);
+    exit(1);
 };
 
 
@@ -402,18 +483,23 @@ void LDA_INY(CPU *cpu) {
 
 void LDX_IM(CPU *cpu) {
     log_error("Unimplemented, %s:%d", __FILE__, __LINE__);
+    exit(1);
 };
 void LDX_ZP(CPU *cpu) {
     log_error("Unimplemented, %s:%d", __FILE__, __LINE__);
+    exit(1);
 };
 void LDX_ZPY(CPU *cpu) {
     log_error("Unimplemented, %s:%d", __FILE__, __LINE__);
+    exit(1);
 };
 void LDX_A(CPU *cpu) {
     log_error("Unimplemented, %s:%d", __FILE__, __LINE__);
+    exit(1);
 }
 void LDX_AY(CPU *cpu) {
     log_error("Unimplemented, %s:%d", __FILE__, __LINE__);
+    exit(1);
 };
 
 
@@ -421,18 +507,23 @@ void LDX_AY(CPU *cpu) {
 
 void LDY_IM(CPU *cpu) {
     log_error("Unimplemented, %s:%d", __FILE__, __LINE__);
+    exit(1);
 };
 void LDY_ZP(CPU *cpu) {
     log_error("Unimplemented, %s:%d", __FILE__, __LINE__);
+    exit(1);
 };
 void LDY_ZPY(CPU *cpu) {
     log_error("Unimplemented, %s:%d", __FILE__, __LINE__);
+    exit(1);
 };
 void LDY_A(CPU *cpu) {
     log_error("Unimplemented, %s:%d", __FILE__, __LINE__);
+    exit(1);
 }
 void LDY_AY(CPU *cpu) {
     log_error("Unimplemented, %s:%d", __FILE__, __LINE__);
+    exit(1);
 };
 
 
@@ -440,18 +531,23 @@ void LDY_AY(CPU *cpu) {
 
 void LSR_AC(CPU *cpu) {
     log_error("Unimplemented, %s:%d", __FILE__, __LINE__);
+    exit(1);
 };
 void LSR_ZP(CPU *cpu) {
     log_error("Unimplemented, %s:%d", __FILE__, __LINE__);
+    exit(1);
 };
 void LSR_ZPX(CPU *cpu) {
     log_error("Unimplemented, %s:%d", __FILE__, __LINE__);
+    exit(1);
 };
 void LSR_A(CPU *cpu) {
     log_error("Unimplemented, %s:%d", __FILE__, __LINE__);
+    exit(1);
 }
 void LSR_AX(CPU *cpu) {
     log_error("Unimplemented, %s:%d", __FILE__, __LINE__);
+    exit(1);
 };
 
 
@@ -459,6 +555,7 @@ void LSR_AX(CPU *cpu) {
 
 void NOP_I(CPU *cpu) {
     log_error("Unimplemented, %s:%d", __FILE__, __LINE__);
+    exit(1);
 }
 
 
@@ -466,24 +563,31 @@ void NOP_I(CPU *cpu) {
 
 void ORA_IM(CPU *cpu) {
     log_error("Unimplemented, %s:%d", __FILE__, __LINE__);
+    exit(1);
 };
 void ORA_ZP(CPU *cpu) {
     log_error("Unimplemented, %s:%d", __FILE__, __LINE__);
+    exit(1);
 };
 void ORA_ZPX(CPU *cpu) {
     log_error("Unimplemented, %s:%d", __FILE__, __LINE__);
+    exit(1);
 };
 void ORA_A(CPU *cpu) {
     log_error("Unimplemented, %s:%d", __FILE__, __LINE__);
+    exit(1);
 }
 void ORA_AX(CPU *cpu) {
     log_error("Unimplemented, %s:%d", __FILE__, __LINE__);
+    exit(1);
 };
 void ORA_IX(CPU *cpu) {
     log_error("Unimplemented, %s:%d", __FILE__, __LINE__);
+    exit(1);
 };
 void ORA_IY(CPU *cpu) {
     log_error("Unimplemented, %s:%d", __FILE__, __LINE__);
+    exit(1);
 };
 
 
@@ -491,6 +595,7 @@ void ORA_IY(CPU *cpu) {
 
 void PHA_I(CPU *cpu) {
     log_error("Unimplemented, %s:%d", __FILE__, __LINE__);
+    exit(1);
 }
 
 
@@ -498,6 +603,7 @@ void PHA_I(CPU *cpu) {
 
 void PHP_I(CPU *cpu) {
     log_error("Unimplemented, %s:%d", __FILE__, __LINE__);
+    exit(1);
 }
 
 
@@ -505,6 +611,7 @@ void PHP_I(CPU *cpu) {
 
 void PLA_I(CPU *cpu) {
     log_error("Unimplemented, %s:%d", __FILE__, __LINE__);
+    exit(1);
 }
 
 
@@ -512,6 +619,7 @@ void PLA_I(CPU *cpu) {
 
 void PLP_I(CPU *cpu) {
     log_error("Unimplemented, %s:%d", __FILE__, __LINE__);
+    exit(1);
 }
 
 
@@ -519,18 +627,23 @@ void PLP_I(CPU *cpu) {
 
 void ROL_AC(CPU *cpu) {
     log_error("Unimplemented, %s:%d", __FILE__, __LINE__);
+    exit(1);
 };
 void ROL_ZP(CPU *cpu) {
     log_error("Unimplemented, %s:%d", __FILE__, __LINE__);
+    exit(1);
 };
 void ROL_ZPX(CPU *cpu) {
     log_error("Unimplemented, %s:%d", __FILE__, __LINE__);
+    exit(1);
 };
 void ROL_A(CPU *cpu) {
     log_error("Unimplemented, %s:%d", __FILE__, __LINE__);
+    exit(1);
 }
 void ROL_AX(CPU *cpu) {
     log_error("Unimplemented, %s:%d", __FILE__, __LINE__);
+    exit(1);
 };
 
 
@@ -538,18 +651,23 @@ void ROL_AX(CPU *cpu) {
 
 void ROR_AC(CPU *cpu) {
     log_error("Unimplemented, %s:%d", __FILE__, __LINE__);
+    exit(1);
 };
 void ROR_ZP(CPU *cpu) {
     log_error("Unimplemented, %s:%d", __FILE__, __LINE__);
+    exit(1);
 };
 void ROR_ZPX(CPU *cpu) {
     log_error("Unimplemented, %s:%d", __FILE__, __LINE__);
+    exit(1);
 };
 void ROR_A(CPU *cpu) {
     log_error("Unimplemented, %s:%d", __FILE__, __LINE__);
+    exit(1);
 }
 void ROR_AX(CPU *cpu) {
     log_error("Unimplemented, %s:%d", __FILE__, __LINE__);
+    exit(1);
 };
 
 
@@ -557,6 +675,7 @@ void ROR_AX(CPU *cpu) {
 
 void RTI_I(CPU *cpu) {
     log_error("Unimplemented, %s:%d", __FILE__, __LINE__);
+    exit(1);
 }
 
 
@@ -564,6 +683,7 @@ void RTI_I(CPU *cpu) {
 
 void RTS_I(CPU *cpu) {
     log_error("Unimplemented, %s:%d", __FILE__, __LINE__);
+    exit(1);
 }
 
 
@@ -571,27 +691,35 @@ void RTS_I(CPU *cpu) {
 
 void SBC_IM(CPU *cpu) {
     log_error("Unimplemented, %s:%d", __FILE__, __LINE__);
+    exit(1);
 };
 void SBC_ZP(CPU *cpu) {
     log_error("Unimplemented, %s:%d", __FILE__, __LINE__);
+    exit(1);
 };
 void SBC_ZPX(CPU *cpu) {
     log_error("Unimplemented, %s:%d", __FILE__, __LINE__);
+    exit(1);
 };
 void SBC_A(CPU *cpu) {
     log_error("Unimplemented, %s:%d", __FILE__, __LINE__);
+    exit(1);
 }
 void SBC_AX(CPU *cpu) {
     log_error("Unimplemented, %s:%d", __FILE__, __LINE__);
+    exit(1);
 };
 void SBC_AY(CPU *cpu) {
     log_error("Unimplemented, %s:%d", __FILE__, __LINE__);
+    exit(1);
 };
 void SBC_IX(CPU *cpu) {
     log_error("Unimplemented, %s:%d", __FILE__, __LINE__);
+    exit(1);
 };
 void SBC_IY(CPU *cpu) {
     log_error("Unimplemented, %s:%d", __FILE__, __LINE__);
+    exit(1);
 };
 
 
@@ -599,6 +727,7 @@ void SBC_IY(CPU *cpu) {
 
 void SED_I(CPU *cpu) {
     log_error("Unimplemented, %s:%d", __FILE__, __LINE__);
+    exit(1);
 }
 
 
@@ -606,6 +735,7 @@ void SED_I(CPU *cpu) {
 
 void SEI_I(CPU *cpu) {
     log_error("Unimplemented, %s:%d", __FILE__, __LINE__);
+    exit(1);
 }
 
 
@@ -613,24 +743,31 @@ void SEI_I(CPU *cpu) {
 
 void STA_ZP(CPU *cpu) {
     log_error("Unimplemented, %s:%d", __FILE__, __LINE__);
+    exit(1);
 };
 void STA_ZPX(CPU *cpu) {
     log_error("Unimplemented, %s:%d", __FILE__, __LINE__);
+    exit(1);
 };
 void STA_A(CPU *cpu) {
     log_error("Unimplemented, %s:%d", __FILE__, __LINE__);
+    exit(1);
 }
 void STA_AX(CPU *cpu) {
     log_error("Unimplemented, %s:%d", __FILE__, __LINE__);
+    exit(1);
 };
 void STA_AY(CPU *cpu) {
     log_error("Unimplemented, %s:%d", __FILE__, __LINE__);
+    exit(1);
 };
 void STA_IX(CPU *cpu) {
     log_error("Unimplemented, %s:%d", __FILE__, __LINE__);
+    exit(1);
 };
 void STA_IY(CPU *cpu) {
     log_error("Unimplemented, %s:%d", __FILE__, __LINE__);
+    exit(1);
 };
 
 
@@ -638,12 +775,15 @@ void STA_IY(CPU *cpu) {
 
 void STX_ZP(CPU *cpu) {
     log_error("Unimplemented, %s:%d", __FILE__, __LINE__);
+    exit(1);
 };
 void STX_ZPY(CPU *cpu) {
     log_error("Unimplemented, %s:%d", __FILE__, __LINE__);
+    exit(1);
 };
 void STX_A(CPU *cpu) {
     log_error("Unimplemented, %s:%d", __FILE__, __LINE__);
+    exit(1);
 }
 
 
@@ -651,12 +791,15 @@ void STX_A(CPU *cpu) {
 
 void STY_ZP(CPU *cpu) {
     log_error("Unimplemented, %s:%d", __FILE__, __LINE__);
+    exit(1);
 };
 void STY_ZPY(CPU *cpu) {
     log_error("Unimplemented, %s:%d", __FILE__, __LINE__);
+    exit(1);
 };
 void STY_A(CPU *cpu) {
     log_error("Unimplemented, %s:%d", __FILE__, __LINE__);
+    exit(1);
 }
 
 
@@ -664,6 +807,7 @@ void STY_A(CPU *cpu) {
 
 void TAX_I(CPU *cpu) {
     log_error("Unimplemented, %s:%d", __FILE__, __LINE__);
+    exit(1);
 }
 
 
@@ -671,6 +815,7 @@ void TAX_I(CPU *cpu) {
 
 void TAY_I(CPU *cpu) {
     log_error("Unimplemented, %s:%d", __FILE__, __LINE__);
+    exit(1);
 }
 
 
@@ -678,6 +823,7 @@ void TAY_I(CPU *cpu) {
 
 void TSX_I(CPU *cpu) {
     log_error("Unimplemented, %s:%d", __FILE__, __LINE__);
+    exit(1);
 }
 
 
@@ -685,6 +831,7 @@ void TSX_I(CPU *cpu) {
 
 void TXA_I(CPU *cpu) {
     log_error("Unimplemented, %s:%d", __FILE__, __LINE__);
+    exit(1);
 }
 
 
@@ -692,6 +839,7 @@ void TXA_I(CPU *cpu) {
 
 void TXS_I(CPU *cpu) {
     log_error("Unimplemented, %s:%d", __FILE__, __LINE__);
+    exit(1);
 }
 
 
@@ -699,4 +847,5 @@ void TXS_I(CPU *cpu) {
 
 void TYA_I(CPU *cpu) {
     log_error("Unimplemented, %s:%d", __FILE__, __LINE__);
+    exit(1);
 }
