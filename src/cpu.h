@@ -12,8 +12,11 @@
 #define INTHUP_DISABLE_BIT 0b00000100
 #define DEC_MOD_BIT 0b00001000
 #define BRK_BIT 0b00010000
-#define OVERFLOW_BIT 0b00100000
-#define NEGATIVE_BIT 0b01000000
+#define ALWAYS_SET_BIT 0b00100000
+#define OVERFLOW_BIT 0b01000000
+#define NEGATIVE_BIT 0b10000000
+
+#define CPU_STAT_DEFAULT ALWAYS_SET_BIT
 
 
 typedef struct {
@@ -27,6 +30,10 @@ typedef struct {
     ADDR_SPACE *address_space;
 } CPU;
 
+
+/* Assumes resposibility of the ADDR_SPACE struct and all its resources */
 CPU *cpu_init(ADDR_SPACE *address_space);
+
+void cpu_deinit(CPU *cpu);
 
 #endif

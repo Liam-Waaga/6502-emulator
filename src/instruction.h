@@ -14,7 +14,6 @@ void execute_instruction(CPU *cpu, unsigned char opcode);
 void ADC_IM(CPU *cpu);
 void ADC_ZP(CPU *cpu);
 void ADC_ZPX(CPU *cpu);
-void ADC_ZPY(CPU *cpu);
 void ADC_A(CPU *cpu);
 void ADC_AX(CPU *cpu);
 void ADC_AY(CPU *cpu);

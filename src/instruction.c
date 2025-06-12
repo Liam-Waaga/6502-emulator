@@ -2,13 +2,59 @@
 #include "cpu.h"
 #include "log/log.h"
 #include "mem.h"
+#include "clock.h"
 
 #include <stdlib.h>
 
 void execute_instruction(CPU *cpu, unsigned char opcode) {
+    log_info("Running opcode 0x%x", opcode);
     switch (opcode) {
         case 0x69:
             ADC_IM(cpu);
+            cpu->PC += 2;
+            register_clock_wait(2, 0);
+            break;
+
+        case 0x65:
+            ADC_ZP(cpu);
+            cpu->PC += 2;
+            register_clock_wait(3, 0);
+            break;
+            
+        case 0x75:
+            ADC_ZPX(cpu);
+            cpu->PC += 2;
+            register_clock_wait(4, 0);
+            break;
+            
+        case 0x6D:
+            ADC_A(cpu);
+            cpu->PC += 3;
+            register_clock_wait(4, 0);
+            break;
+            
+        case 0x7D:
+            ADC_AX(cpu);
+            cpu->PC += 3;
+            register_clock_wait(4, 0);
+            break;
+            
+        case 0x79:
+            ADC_AY(cpu);
+            cpu->PC += 3;
+            register_clock_wait(4, 0);
+            break;
+            
+        case 0x61:
+            ADC_INX(cpu);
+            cpu->PC += 2;
+            register_clock_wait(6, 0);
+            break;
+
+        case 0x71:
+            ADC_INY(cpu);
+            cpu->PC += 2;
+            register_clock_wait(6, 0);
             break;
         
         default:
@@ -21,10 +67,7 @@ void execute_instruction(CPU *cpu, unsigned char opcode) {
 
 /* ADC */
 
-void ADC_IM(CPU *cpu) {
-    int operand = vm_read_byte(cpu->address_space, cpu->PC + 1);
-    int result = cpu->Accumulator + (cpu->STAT & CARRY_BIT) + operand;
-    
+void do_ADC(CPU *cpu, int operand, int result) {
     if (result > 0xff) {
         cpu->STAT = cpu->STAT | CARRY_BIT;
     }
@@ -36,39 +79,69 @@ void ADC_IM(CPU *cpu) {
     }
 
     cpu->Accumulator = (Byte_t) result;
-};
-void ADC_ZP(CPU *cpu) {
-    log_error("Unimplemented, %s:%d", __FILE__, __LINE__);
-    exit(1);
-};
-void ADC_ZPX(CPU *cpu) {
-    log_error("Unimplemented, %s:%d", __FILE__, __LINE__);
-    exit(1);
-};
-void ADC_ZPY(CPU *cpu) {
-    log_error("Unimplemented, %s:%d", __FILE__, __LINE__);
-    exit(1);
-};
-void ADC_A(CPU *cpu) {
-    log_error("Unimplemented, %s:%d", __FILE__, __LINE__);
-    exit(1);
 }
+
+void ADC_IM(CPU *cpu) {
+    int operand = vm_read_byte(cpu->address_space, cpu->PC + 1);
+    int result = cpu->Accumulator + (cpu->STAT & CARRY_BIT) + operand;
+    
+    do_ADC(cpu, operand, result);
+}
+
+void ADC_ZP(CPU *cpu) {
+    int operand = vm_read_byte(cpu->address_space, vm_read_byte(cpu->address_space, cpu->PC + 1));
+    int result = cpu->Accumulator + (cpu->STAT & CARRY_BIT) + operand;
+    
+    do_ADC(cpu, operand, result);
+}
+
+void ADC_ZPX(CPU *cpu) {
+    int operand = vm_read_byte(cpu->address_space, vm_read_byte(cpu->address_space, cpu->PC + 1)) + cpu->IndexRegX;
+    operand %= 256;
+    int result = cpu->Accumulator + (cpu->STAT & CARRY_BIT) + operand;
+    
+    do_ADC(cpu, operand, result);
+}
+
+void ADC_A(CPU *cpu) {
+    int operand = vm_read_byte(cpu->address_space, vm_read_word(cpu->address_space, cpu->PC + 1));
+    int result = cpu->Accumulator + (cpu->STAT & CARRY_BIT) + operand;
+    
+    do_ADC(cpu, operand, result);
+}
+
 void ADC_AX(CPU *cpu) {
-    log_error("Unimplemented, %s:%d", __FILE__, __LINE__);
-    exit(1);
-};
+    int operand = vm_read_byte(cpu->address_space, vm_read_word(cpu->address_space, cpu->PC + 1) + cpu->IndexRegX);
+    int result = cpu->Accumulator + (cpu->STAT & CARRY_BIT) + operand;
+
+    do_ADC(cpu, operand, result);
+}
+
 void ADC_AY(CPU *cpu) {
-    log_error("Unimplemented, %s:%d", __FILE__, __LINE__);
-    exit(1);
-};
+    int operand = vm_read_byte(cpu->address_space, vm_read_word(cpu->address_space, cpu->PC + 1) + cpu->IndexRegY);
+    int result = cpu->Accumulator + (cpu->STAT & CARRY_BIT) + operand;
+
+    do_ADC(cpu, operand, result);
+}
+
 void ADC_INX(CPU *cpu) {
-    log_error("Unimplemented, %s:%d", __FILE__, __LINE__);
-    exit(1);
-};
+                  /* read the final address */
+    int operand = vm_read_byte(cpu->address_space, 
+                  /* read the address containing the final address */
+                  vm_read_word(cpu->address_space, (vm_read_byte(cpu->address_space, cpu->PC + 1) + cpu->IndexRegX) % 256));
+
+    int result = cpu->Accumulator + (cpu->STAT & CARRY_BIT) + operand;
+
+    do_ADC(cpu, operand, result);
+}
+
 void ADC_INY(CPU *cpu) {
-    log_error("Unimplemented, %s:%d", __FILE__, __LINE__);
-    exit(1);
-};
+    int operand = vm_read_byte(cpu->address_space, vm_read_word(cpu->address_space, vm_read_byte(cpu->address_space, cpu->PC + 1)) + cpu->IndexRegY);
+    int result = cpu->Accumulator + (cpu->STAT & CARRY_BIT) + operand;
+
+    do_ADC(cpu, operand, result);
+}
+
 
 
 /* AND */

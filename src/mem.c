@@ -1,5 +1,6 @@
 #include "mem.h"
 #include "devices/ram.h"
+#include "devices/rom.h"
 #include "log/log.h"
 #include "parcer.h"
 #include "types.h"
@@ -7,7 +8,7 @@
 #include <stddef.h>
 #include <stdlib.h>
 
-extern RUNTIME_FLAGS flags;
+extern SYSTEM_FLAGS flags;
 
 ADDR_SPACE *addr_init(PARCER_DEVICE *device_arr) {
     ADDR_SPACE *addr_space = (ADDR_SPACE *) malloc(sizeof(ADDR_SPACE));
@@ -23,9 +24,11 @@ ADDR_SPACE *addr_init(PARCER_DEVICE *device_arr) {
 
         switch (dev.type) {
             case DEV_RAM:
-                dev.device.ram = ram_init(dev.address_end - dev.address_begin + 1);
+                dev.device.ram = ram_init(dev.address_end - dev.address_begin);
                 break;
             case DEV_ROM:
+                dev.device.rom = rom_init(device_arr[i].dev_opts.rom_opts.path);
+                break;
         }
     }
 
@@ -57,11 +60,17 @@ void vm_register_device(ADDR_SPACE *address_space, DEVICE device) {
 
 void device_deinit(DEVICE device) {
     switch (device.type) {
+        case DEV_NONE:
+            log_warn("Can't deinit device of type DEV_NONE, %s:%d", __FILE__, __LINE__);
+            break;
         case DEV_RAM:
             ram_deinit(device.device.ram);
             break;
         case DEV_ROM:
             rom_deinit(device.device.rom);
+            break;
+        default:
+            log_warn("Can't deinit device of unkown type");
             break;
     }
 }

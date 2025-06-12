@@ -12,7 +12,7 @@
 
 #define DEF_MEMCONFIG_FILE_PATH "memconfig.conf"
 
-RUNTIME_FLAGS flags;
+SYSTEM_FLAGS flags;
 
 _Noreturn void usage(char const * const argv0) {
     printf("Usage: %s\n", argv0);
