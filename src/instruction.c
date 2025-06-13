@@ -12,49 +12,49 @@ void execute_instruction(CPU *cpu, unsigned char opcode) {
         case 0x69:
             ADC_IM(cpu);
             cpu->PC += 2;
-            register_clock_wait(2, 0);
+            schedule_clock_wait(2, 0);
             break;
 
         case 0x65:
             ADC_ZP(cpu);
             cpu->PC += 2;
-            register_clock_wait(3, 0);
+            schedule_clock_wait(3, 0);
             break;
             
         case 0x75:
             ADC_ZPX(cpu);
             cpu->PC += 2;
-            register_clock_wait(4, 0);
+            schedule_clock_wait(4, 0);
             break;
             
         case 0x6D:
             ADC_A(cpu);
             cpu->PC += 3;
-            register_clock_wait(4, 0);
+            schedule_clock_wait(4, 0);
             break;
             
         case 0x7D:
             ADC_AX(cpu);
             cpu->PC += 3;
-            register_clock_wait(4, 0);
+            schedule_clock_wait(4, 0);
             break;
             
         case 0x79:
             ADC_AY(cpu);
             cpu->PC += 3;
-            register_clock_wait(4, 0);
+            schedule_clock_wait(4, 0);
             break;
             
         case 0x61:
             ADC_INX(cpu);
             cpu->PC += 2;
-            register_clock_wait(6, 0);
+            schedule_clock_wait(6, 0);
             break;
 
         case 0x71:
             ADC_INY(cpu);
             cpu->PC += 2;
-            register_clock_wait(6, 0);
+            schedule_clock_wait(6, 0);
             break;
         
         default:
@@ -146,117 +146,199 @@ void ADC_INY(CPU *cpu) {
 
 /* AND */
 
+void do_AND(CPU *cpu, int o1){
+    int o2 = cpu->Accumulator;
+    int result = o1 & o2;
+    if (cpu->Accumulator == 0)
+        cpu->STAT = cpu->STAT | ZERO_BIT;
+    if ((o1 & 0b10000000) > 0)
+        cpu->STAT |= NEGATIVE_BIT;
+    cpu->Accumulator = result;
+}
+
 void AND_IM(CPU *cpu) {
-    log_error("Unimplemented, %s:%d", __FILE__, __LINE__);
-    exit(1);
+    int operand1 = vm_read_byte(cpu->address_space, cpu->PC + 1);
+    do_AND(cpu, operand1);
 };
 void AND_ZP(CPU *cpu) {
-    log_error("Unimplemented, %s:%d", __FILE__, __LINE__);
-    exit(1);
+    int operand1 = vm_read_byte(cpu->address_space, vm_read_byte(cpu->address_space, cpu->PC + 1));
+    do_AND(cpu, operand1);
 };
 void AND_ZPX(CPU *cpu) {
-    log_error("Unimplemented, %s:%d", __FILE__, __LINE__);
-    exit(1);
-};
-void AND_ZPY(CPU *cpu) {
-    log_error("Unimplemented, %s:%d", __FILE__, __LINE__);
-    exit(1);
+    int operand1 = vm_read_byte(cpu->address_space, vm_read_byte(cpu->address_space, cpu->PC + 1) + cpu->IndexRegX);
+    do_AND(cpu, operand1);
 };
 void AND_A(CPU *cpu) {
-    log_error("Unimplemented, %s:%d", __FILE__, __LINE__);
-    exit(1);
+    int operand1 = vm_read_byte(cpu->address_space, vm_read_word(cpu->address_space, cpu->PC + 1));
+    do_AND(cpu, operand1);
 }
 void AND_AX(CPU *cpu) {
-    log_error("Unimplemented, %s:%d", __FILE__, __LINE__);
-    exit(1);
+    int operand1 = vm_read_byte(cpu->address_space, vm_read_word(cpu->address_space, cpu->PC + 1) + cpu->IndexRegX);
+    do_AND(cpu, operand1);
 };
 void AND_AY(CPU *cpu) {
-    log_error("Unimplemented, %s:%d", __FILE__, __LINE__);
-    exit(1);
+    int operand1 = vm_read_byte(cpu->address_space, vm_read_word(cpu->address_space, cpu->PC + 1) + cpu->IndexRegY);
+    do_AND(cpu, operand1);
 };
 void AND_INX(CPU *cpu) {
-    log_error("Unimplemented, %s:%d", __FILE__, __LINE__);
-    exit(1);
+    int operand1 = vm_read_byte(cpu->address_space, vm_read_word(cpu->address_space, (vm_read_byte(cpu->address_space, cpu->PC + 1) + cpu->IndexRegX) % 256));;
+    do_AND(cpu, operand1);
 };
 void AND_INY(CPU *cpu) {
-    log_error("Unimplemented, %s:%d", __FILE__, __LINE__);
-    exit(1);
+    int operand = vm_read_byte(cpu->address_space, vm_read_word(cpu->address_space, vm_read_byte(cpu->address_space, cpu->PC + 1)) + cpu->IndexRegY);
+    do_AND(cpu, operand);
 };
 
 
 /* ASL */
 
-void ADL_AC(CPU *cpu) {
-    log_error("Unimplemented, %s:%d", __FILE__, __LINE__);
-    exit(1);
+void ASL_AC(CPU *cpu) {
+    if (cpu->Accumulator == 0)
+        cpu->STAT |= ZERO_BIT;
+    if ((cpu->Accumulator & 0b10000000) > 0)
+        cpu->STAT |= CARRY_BIT;
+    else
+        cpu->STAT &= ~CARRY_BIT;
+
+    cpu->Accumulator <<= 1;
+    if ((cpu->STAT & CARRY_BIT) > 0)
+        cpu->Accumulator++;
+
+    if ((cpu->Accumulator & 0b10000000) > 0)
+        cpu->STAT |= NEGATIVE_BIT;
 };
-void ADL_ZP(CPU *cpu) {
-    log_error("Unimplemented, %s:%d", __FILE__, __LINE__);
-    exit(1);
+
+void ASL_ZP(CPU *cpu) {
+    Word_t address = vm_read_byte(cpu->address_space, cpu->PC + 1);
+    address %= 256;
+    const Byte_t value = vm_read_byte(cpu->address_space, address);
+
+    if (value == 0)
+        cpu->STAT |= ZERO_BIT;
+    if ((value & 0b10000000) > 0)
+        cpu->STAT |= CARRY_BIT;
+    else
+        cpu->STAT &= ~CARRY_BIT;
+
+    vm_write_byte(cpu->address_space, address, (value << 1) + (((cpu->STAT & CARRY_BIT) > 0) ? 1 : 0));
+
+    if ((value & 0b10000000) > 0)
+        cpu->STAT |= NEGATIVE_BIT;
 };
-void ADL_ZPX(CPU *cpu) {
-    log_error("Unimplemented, %s:%d", __FILE__, __LINE__);
-    exit(1);
+
+void ASL_ZPX(CPU *cpu) {
+    Word_t address = vm_read_byte(cpu->address_space, cpu->PC + 1) + cpu->IndexRegX;
+    address %= 256;
+    const Byte_t value = vm_read_byte(cpu->address_space, address);
+
+    if (value == 0)
+        cpu->STAT |= ZERO_BIT;
+    if ((value & 0b10000000) > 0)
+        cpu->STAT |= CARRY_BIT;
+    else
+        cpu->STAT &= ~CARRY_BIT;
+
+    vm_write_byte(cpu->address_space, address, (value << 1) + (((cpu->STAT & CARRY_BIT) > 0) ? 1 : 0));
+
+    if ((value & 0b10000000) > 0)
+        cpu->STAT |= NEGATIVE_BIT;
 };
-void ADL_A(CPU *cpu) {
-    log_error("Unimplemented, %s:%d", __FILE__, __LINE__);
-    exit(1);
+
+void ASL_A(CPU *cpu) {
+    Word_t address = vm_read_word(cpu->address_space, cpu->PC + 1);
+    const Byte_t value = vm_read_byte(cpu->address_space, address);
+
+    if (value == 0)
+        cpu->STAT |= ZERO_BIT;
+    if ((value & 0b10000000) > 0)
+        cpu->STAT |= CARRY_BIT;
+    else
+        cpu->STAT &= ~CARRY_BIT;
+
+    vm_write_byte(cpu->address_space, address, (value << 1) + (((cpu->STAT & CARRY_BIT) > 0) ? 1 : 0));
+
+    if ((value & 0b10000000) > 0)
+        cpu->STAT |= NEGATIVE_BIT;
 }
-void ADL_AX(CPU *cpu) {
-    log_error("Unimplemented, %s:%d", __FILE__, __LINE__);
-    exit(1);
+
+void ASL_AX(CPU *cpu) {
+    Word_t address = vm_read_word(cpu->address_space, cpu->PC + 1) + cpu->IndexRegX;
+    const Byte_t value = vm_read_byte(cpu->address_space, address);
+
+    if (value == 0)
+        cpu->STAT |= ZERO_BIT;
+    if ((value & 0b10000000) > 0)
+        cpu->STAT |= CARRY_BIT;
+    else
+        cpu->STAT &= ~CARRY_BIT;
+
+    vm_write_byte(cpu->address_space, address, (value << 1) + (((cpu->STAT & CARRY_BIT) > 0) ? 1 : 0));
+
+    if ((value & 0b10000000) > 0)
+        cpu->STAT |= NEGATIVE_BIT;
 };
 
 
 /* BCC */
 
 void BCC_R(CPU *cpu) {
-    log_error("Unimplemented, %s:%d", __FILE__, __LINE__);
-    exit(1);
+    Byte_signed_t offset = vm_read_byte(cpu->address_space, cpu->PC + 1);
+    if (!((cpu->STAT & CARRY_BIT) > 0))
+    cpu->PC += offset;
 }
 
 
 /* BCS */
 
 void BCS_R(CPU *cpu) {
-    log_error("Unimplemented, %s:%d", __FILE__, __LINE__);
-    exit(1);
+    Byte_signed_t offset = vm_read_byte(cpu->address_space, cpu->PC + 1);
+    if ((cpu->STAT & CARRY_BIT) > 0)
+        cpu->PC += offset;
 }
 
 
 /* BEQ */
 
 void BEQ_R(CPU *cpu) {
-    log_error("Unimplemented, %s:%d", __FILE__, __LINE__);
-    exit(1);
+    Byte_signed_t offset = vm_read_byte(cpu->address_space, cpu->PC + 1);
+    if ((cpu->STAT & ZERO_BIT) > 0)
+        cpu->PC += offset;
 }
 
 
 /* BIT */
 
 void BIT_ZP(CPU *cpu) {
-    log_error("Unimplemented, %s:%d", __FILE__, __LINE__);
-    exit(1);
+    int acc = cpu->Accumulator;
+    do_AND(cpu, vm_read_byte(cpu->address_space, vm_read_byte(cpu->address_space, cpu->PC + 1)));
+    if (vm_read_byte(cpu->address_space, vm_read_byte(cpu->address_space, cpu->PC + 1)) & 0b01000000)
+        cpu->STAT |= OVERFLOW_BIT;
+    cpu->Accumulator = acc;
 };
 void BIT_A(CPU *cpu) {
-    log_error("Unimplemented, %s:%d", __FILE__, __LINE__);
-    exit(1);
+    int acc = cpu->Accumulator;
+    do_AND(cpu, vm_read_byte(cpu->address_space, vm_read_word(cpu->address_space, cpu->PC + 1)));
+    if (vm_read_byte(cpu->address_space, vm_read_word(cpu->address_space, cpu->PC + 1)) & 0b01000000)
+        cpu->STAT |= OVERFLOW_BIT;
+    cpu->Accumulator = acc;
 }
 
 
 /* BMI */
 
 void BMI_R(CPU *cpu) {
-    log_error("Unimplemented, %s:%d", __FILE__, __LINE__);
-    exit(1);
+    Byte_signed_t offset = vm_read_byte(cpu->address_space, cpu->PC + 1);
+    if ((cpu->STAT & NEGATIVE_BIT) > 0)
+        cpu->PC += offset;
 }
 
 
 /* BNE */
 
 void BNE_R(CPU *cpu) {
-    log_error("Unimplemented, %s:%d", __FILE__, __LINE__);
-    exit(1);
+    Byte_signed_t offset = vm_read_byte(cpu->address_space, cpu->PC + 1);
+    if (!((cpu->STAT & ZERO_BIT) > 0))
+        cpu->PC += offset;
 }
 
 

@@ -45,7 +45,7 @@ void clock_sync_cycles(uint64_t cycles_elapsed, uint64_t clock_hz) {
 }
 
 
-void register_clock_wait(uint64_t cycles, int force_sync) {
+void schedule_clock_wait(uint64_t cycles, int force_sync) {
     cycles_since_sync += cycles;
     if (force_sync || cycles >= CYCLES_BETWEEN_SYNCS) {
         clock_sync_cycles(cycles_since_sync, flags.clock_speed);

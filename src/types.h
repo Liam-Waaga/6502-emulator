@@ -12,6 +12,8 @@
 
 typedef uint8_t Byte_t;
 typedef uint16_t Word_t;
+typedef int8_t Byte_signed_t;
+typedef int16_t Word_signed_t;
 
 typedef struct {
     unsigned long clock_speed; /* 0 for system clock */
