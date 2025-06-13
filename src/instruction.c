@@ -56,7 +56,285 @@ void execute_instruction(CPU *cpu, unsigned char opcode) {
             cpu->PC += 2;
             schedule_clock_wait(6, 0);
             break;
+
+        case 0x29:
+            AND_IM(cpu);
+            cpu->PC += 2;
+            schedule_clock_wait(2, 0);
+            break;
+
+        case 0x25:
+            AND_ZP(cpu);
+            cpu->PC += 2;
+            schedule_clock_wait(3, 0);
+            break;
+
+        case 0x35:
+            AND_ZPX(cpu);
+            cpu->PC += 2;
+            schedule_clock_wait(4, 0);
+            break;
+
+        case 0x2D:
+            AND_A(cpu);
+            cpu->PC += 3;
+            schedule_clock_wait(4, 0);
+            break;
+
+        case 0x3D:
+            AND_AX(cpu);
+            cpu->PC += 3;
+            schedule_clock_wait(4, 0);
+            break;
+
+        case 0x39:
+            AND_AY(cpu);
+            cpu->PC += 3;
+            schedule_clock_wait(4, 0);
+            break;
+
+        case 0x21:
+            AND_INX(cpu);
+            cpu->PC += 2;
+            schedule_clock_wait(6, 0);
+            break;
+
+        case 0x31:
+            AND_INY(cpu);
+            cpu->PC += 2;
+            schedule_clock_wait(5, 0);
+            break;
+
+        case 0x0A:
+            ASL_AC(cpu);
+            cpu->PC += 1;
+            schedule_clock_wait(2, 0);
+            break;
+
+        case 0x06:
+            ASL_ZP(cpu);
+            cpu->PC += 2;
+            schedule_clock_wait(5, 0);
+            break;
+
+        case 0x16:
+            ASL_ZPX(cpu);
+            cpu->PC += 2;
+            schedule_clock_wait(3, 0);
+            break;
+
+        case 0x0E:
+            ASL_A(cpu);
+            cpu->PC += 3;
+            schedule_clock_wait(6, 0);
+            break;
+
+        case 0x1E:
+            ASL_AX(cpu);
+            cpu->PC += 3;
+            schedule_clock_wait(7, 0);
+            break;
+
+        case 0x90:
+            BCC_R(cpu);
+            cpu->PC += 2;
+            schedule_clock_wait(2, 0);
+            break;
+
+        case 0xB0:
+            BCS_R(cpu);
+            cpu->PC += 2;
+            schedule_clock_wait(2, 0);
+            break;
+
+        case 0xF0:
+            BEQ_R(cpu);
+            cpu->PC += 2;
+            schedule_clock_wait(2, 0);
+            break;
+
+        case 0x24:
+            BIT_ZP(cpu);
+            cpu->PC += 2;
+            schedule_clock_wait(3, 0);
+            break;
+
+        case 0x2C:
+            BIT_A(cpu);
+            cpu->PC += 3;
+            schedule_clock_wait(4, 0);
+            break;
+
+        case 0x30:
+            BMI_R(cpu);
+            cpu->PC += 2;
+            schedule_clock_wait(2, 0);
+            break;
+
+        case 0xD0:
+            BNE_R(cpu);
+            cpu->PC += 2;
+            schedule_clock_wait(2, 0);
+            break;
+
+        case 0x10:
+            BPL_R(cpu);
+            cpu->PC += 2;
+            schedule_clock_wait(2, 0);
+            break;
+
+        case 0x50:
+            BVC_R(cpu);
+            cpu->PC += 2;
+            schedule_clock_wait(2, 0);
+            break;
+
+        case 0x70:
+            BVS_R(cpu);
+            cpu->PC += 2;
+            schedule_clock_wait(2, 0);
+            break;
+
+        case 0x18:
+            CLC_I(cpu);
+            cpu->PC += 1;
+            schedule_clock_wait(2, 0);
+            break;
+
+        case 0xD8:
+            CLD_I(cpu);
+            cpu->PC += 1;
+            schedule_clock_wait(2, 0);
+            break;
+
+        case 0x58:
+            CLI_I(cpu);
+            cpu->PC += 1;
+            schedule_clock_wait(2, 0);
+            break;
+
+        case 0xB8:
+            CLV_I(cpu);
+            cpu->PC += 1;
+            schedule_clock_wait(2, 0);
+            break;
+
+        case 0xC9:
+            CMP_IM(cpu);
+            cpu->PC += 2;
+            schedule_clock_wait(2, 0);
+            break;
+
+        case 0xC5:
+            CMP_ZP(cpu);
+            cpu->PC += 2;
+            schedule_clock_wait(3, 0);
+            break;
+
+        case 0xD5:
+            CMP_ZPX(cpu);
+            cpu->PC += 2;
+            schedule_clock_wait(4, 0);
+            break;
+
+        case 0xCD:
+            CMP_A(cpu);
+            cpu->PC += 3;
+            schedule_clock_wait(4, 0);
+            break;
+
+        case 0xDD:
+            CMP_AX(cpu);
+            cpu->PC += 3;
+            schedule_clock_wait(4, 0);
+            break;
+
+        case 0xD9:
+            CMP_AY(cpu);
+            cpu->PC += 3;
+            schedule_clock_wait(4, 0);
+            break;
+
+        case 0xC1:
+            CMP_INX(cpu);
+            cpu->PC += 2;
+            schedule_clock_wait(6, 0);
+            break;
+
+        case 0xD1:
+            CMP_INY(cpu);
+            cpu->PC += 2;
+            schedule_clock_wait(5, 0);
+            break;
+
+        case 0xE0:
+            CPX_IM(cpu);
+            cpu->PC += 2;
+            schedule_clock_wait(2, 0);
+            break;
+
+        case 0xE4:
+            CPX_ZP(cpu);
+            cpu->PC += 2;
+            schedule_clock_wait(3, 0);
+            break;
+
+        case 0xEC:
+            CPX_A(cpu);
+            cpu->PC += 3;
+            schedule_clock_wait(4, 0);
+            break;
+
+        case 0xC0:
+            CPY_IM(cpu);
+            cpu->PC += 2;
+            schedule_clock_wait(2, 0);
+            break;
+
+        case 0xC4:
+            CPY_ZP(cpu);
+            cpu->PC += 2;
+            schedule_clock_wait(3, 0);
+            break;
+
+        case 0xCC:
+            CPY_A(cpu);
+            cpu->PC += 3;
+            schedule_clock_wait(4, 0);
+            break;
+
+        case 0xC6:
+            DEC_ZP(cpu);
+            cpu->PC += 2;
+            schedule_clock_wait(5, 0);
+            break;
+
+        case 0xD6:
+            DEC_ZPX(cpu);
+            cpu->PC += 2;
+            schedule_clock_wait(6, 0);
+            break;
+
+        case 0xCE:
+            DEC_A(cpu);
+            cpu->PC += 3;
+            schedule_clock_wait(6, 0);
+            break;
         
+        case 0xDE:
+            DEC_AX(cpu);
+            cpu->PC += 3;
+            schedule_clock_wait(7, 0);
+            break;
+        
+        case 0xCA:
+            DEX_I(cpu);
+            cpu->PC += 1;
+            schedule_clock_wait(2, 0);
+            break;
+        
+        
+
         default:
             log_error("Opcode '%x' not found", opcode);
             exit(1);
@@ -113,6 +391,7 @@ void ADC_A(CPU *cpu) {
 void ADC_AX(CPU *cpu) {
     int operand = vm_read_byte(cpu->address_space, vm_read_word(cpu->address_space, cpu->PC + 1) + cpu->IndexRegX);
     int result = cpu->Accumulator + (cpu->STAT & CARRY_BIT) + operand;
+    
 
     do_ADC(cpu, operand, result);
 }
@@ -181,7 +460,7 @@ void AND_AY(CPU *cpu) {
     do_AND(cpu, operand1);
 };
 void AND_INX(CPU *cpu) {
-    int operand1 = vm_read_byte(cpu->address_space, vm_read_word(cpu->address_space, (vm_read_byte(cpu->address_space, cpu->PC + 1) + cpu->IndexRegX) % 256));;
+    int operand1 = vm_read_byte(cpu->address_space, vm_read_word(cpu->address_space, (vm_read_byte(cpu->address_space, cpu->PC + 1) + cpu->IndexRegX) % 256));
     do_AND(cpu, operand1);
 };
 void AND_INY(CPU *cpu) {
@@ -345,8 +624,9 @@ void BNE_R(CPU *cpu) {
 /* BPL */
 
 void BPL_R(CPU *cpu) {
-    log_error("Unimplemented, %s:%d", __FILE__, __LINE__);
-    exit(1);
+    Byte_signed_t offset = vm_read_byte(cpu->address_space, cpu->PC + 1);
+    if (!((cpu->STAT & NEGATIVE_BIT) > 0))
+        cpu->PC += offset;
 }
 
 
@@ -361,116 +641,141 @@ void BRK_R(CPU *cpu) {
 /* BVC */
 
 void BVC_R(CPU *cpu) {
-    log_error("Unimplemented, %s:%d", __FILE__, __LINE__);
-    exit(1);
+    Byte_signed_t offset = vm_read_byte(cpu->address_space, cpu->PC + 1);
+    if (!((cpu->STAT & OVERFLOW_BIT) > 0))
+        cpu->PC += offset;
 }
 
 
 /* BVS */
 
 void BVS_R(CPU *cpu) {
-    log_error("Unimplemented, %s:%d", __FILE__, __LINE__);
-    exit(1);
+    Byte_signed_t offset = vm_read_byte(cpu->address_space, cpu->PC + 1);
+    if ((cpu->STAT & OVERFLOW_BIT) > 0)
+        cpu->PC += offset;
 }
 
 
 /* CLC */
 
 void CLC_I(CPU *cpu) {
-    log_error("Unimplemented, %s:%d", __FILE__, __LINE__);
-    exit(1);
+    cpu->STAT &= ~CARRY_BIT;
 }
 
 
 /* CLD */
 
 void CLD_I(CPU *cpu) {
-    log_error("Unimplemented, %s:%d", __FILE__, __LINE__);
-    exit(1);
+    cpu->STAT &= ~DEC_MOD_BIT;
 }
 
 
 /* CLI */
 
 void CLI_I(CPU *cpu) {
-    log_error("Unimplemented, %s:%d", __FILE__, __LINE__);
-    exit(1);
+    cpu->STAT &= ~INTHUP_DISABLE_BIT;
 }
 
 
 /* CLV */
 
 void CLV_I(CPU *cpu) {
-    log_error("Unimplemented, %s:%d", __FILE__, __LINE__);
-    exit(1);
+    cpu->STAT &= ~OVERFLOW_BIT;
 }
 
 
 /* CMP */
 
+void do_CMP(CPU *cpu, int op1) {
+    if (cpu->Accumulator == op1)
+        cpu->STAT |= ZERO_BIT;
+    if (cpu->Accumulator >= op1)
+        cpu->STAT |= CARRY_BIT;
+    if ((cpu->Accumulator - op1) & 0b10000000)
+        cpu->STAT |= NEGATIVE_BIT;
+}
+
 void CMP_IM(CPU *cpu) {
-    log_error("Unimplemented, %s:%d", __FILE__, __LINE__);
-    exit(1);
+    int op1 = vm_read_byte(cpu->address_space, cpu->PC + 1);
+    do_CMP(cpu, op1);
 };
 void CMP_ZP(CPU *cpu) {
-    log_error("Unimplemented, %s:%d", __FILE__, __LINE__);
-    exit(1);
+    int op1 = vm_read_byte(cpu->address_space, vm_read_byte(cpu->address_space, cpu->PC + 1));
+    do_CMP(cpu, op1);
 };
 void CMP_ZPX(CPU *cpu) {
-    log_error("Unimplemented, %s:%d", __FILE__, __LINE__);
-    exit(1);
+    int op1 = vm_read_byte(cpu->address_space, (vm_read_byte(cpu->address_space, cpu->PC + 1) + cpu->IndexRegX) % 256);
+    do_CMP(cpu, op1);
 };
 void CMP_A(CPU *cpu) {
-    log_error("Unimplemented, %s:%d", __FILE__, __LINE__);
-    exit(1);
+    int op1 = vm_read_byte(cpu->address_space, vm_read_word(cpu->address_space, cpu->PC + 1));
+    do_CMP(cpu, op1);
 }
 void CMP_AX(CPU *cpu) {
-    log_error("Unimplemented, %s:%d", __FILE__, __LINE__);
-    exit(1);
+    int op1 = vm_read_byte(cpu->address_space, vm_read_word(cpu->address_space, cpu->PC + 1) + cpu->IndexRegX);
+    do_CMP(cpu, op1);
 };
 void CMP_AY(CPU *cpu) {
-    log_error("Unimplemented, %s:%d", __FILE__, __LINE__);
-    exit(1);
+    int op1 = vm_read_byte(cpu->address_space, vm_read_word(cpu->address_space, cpu->PC + 1) + cpu->IndexRegY);
+    do_CMP(cpu, op1);
 };
 void CMP_INX(CPU *cpu) {
-    log_error("Unimplemented, %s:%d", __FILE__, __LINE__);
-    exit(1);
+    int op1 = vm_read_byte(cpu->address_space, vm_read_word(cpu->address_space, (vm_read_byte(cpu->address_space, cpu->PC + 1) + cpu->IndexRegX) % 256));
+    do_CMP(cpu, op1);
 };
 void CMP_INY(CPU *cpu) {
-    log_error("Unimplemented, %s:%d", __FILE__, __LINE__);
-    exit(1);
+    int op1 = vm_read_byte(cpu->address_space, vm_read_word(cpu->address_space, vm_read_byte(cpu->address_space, cpu->PC + 1)) + cpu->IndexRegY);
+    do_CMP(cpu, op1);
 };
 
 
 /* CPX */
 
+void do_CPX(CPU *cpu, int op1) {
+    if (cpu->IndexRegX == op1)
+        cpu->STAT |= ZERO_BIT;
+    if (cpu->IndexRegX >= op1)
+        cpu->STAT |= CARRY_BIT;
+    if ((cpu->IndexRegX - op1) & 0b10000000)
+        cpu->STAT |= NEGATIVE_BIT;
+}
+
 void CPX_IM(CPU *cpu) {
-    log_error("Unimplemented, %s:%d", __FILE__, __LINE__);
-    exit(1);
+    int op1 = vm_read_byte(cpu->address_space, cpu->PC + 1);
+    do_CPX(cpu, op1);
 };
 void CPX_ZP(CPU *cpu) {
-    log_error("Unimplemented, %s:%d", __FILE__, __LINE__);
-    exit(1);
+    int op1 = vm_read_byte(cpu->address_space, vm_read_byte(cpu->address_space, cpu->PC + 1));
+    do_CPX(cpu, op1);
 };
 void CPX_A(CPU *cpu) {
-    log_error("Unimplemented, %s:%d", __FILE__, __LINE__);
-    exit(1);
+    int op1 = vm_read_byte(cpu->address_space, vm_read_word(cpu->address_space, cpu->PC + 1));
+    do_CPX(cpu, op1);
 }
 
 
 /* CPY */
 
+void do_CPY(CPU *cpu, int op1) {
+    if (cpu->IndexRegY == op1)
+        cpu->STAT |= ZERO_BIT;
+    if (cpu->IndexRegY >= op1)
+        cpu->STAT |= CARRY_BIT;
+    if ((cpu->IndexRegY - op1) & 0b10000000)
+        cpu->STAT |= NEGATIVE_BIT;
+}
+
 void CPY_IM(CPU *cpu) {
-    log_error("Unimplemented, %s:%d", __FILE__, __LINE__);
-    exit(1);
+    int op1 = vm_read_byte(cpu->address_space, cpu->PC + 1);
+    do_CPX(cpu, op1);
 };
 void CPY_ZP(CPU *cpu) {
-    log_error("Unimplemented, %s:%d", __FILE__, __LINE__);
-    exit(1);
+    int op1 = vm_read_byte(cpu->address_space, vm_read_byte(cpu->address_space, cpu->PC + 1));
+    do_CPX(cpu, op1);
 };
 void CPY_A(CPU *cpu) {
-    log_error("Unimplemented, %s:%d", __FILE__, __LINE__);
-    exit(1);
+    int op1 = vm_read_byte(cpu->address_space, vm_read_word(cpu->address_space, cpu->PC + 1));
+    do_CPX(cpu, op1);
 }
 
 

@@ -1,4 +1,5 @@
 #include "mem.h"
+#include "clock.h"
 #include "devices/ram.h"
 #include "devices/rom.h"
 #include "log/log.h"

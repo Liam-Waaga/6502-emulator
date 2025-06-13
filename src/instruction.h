@@ -36,11 +36,11 @@ void AND_INY(CPU *cpu);
 
 /* ASL */
 
-void ADL_AC(CPU *cpu);
-void ADL_ZP(CPU *cpu);
-void ADL_ZPX(CPU *cpu);
-void ADL_A(CPU *cpu);
-void ADL_AX(CPU *cpu);
+void ASL_AC(CPU *cpu);
+void ASL_ZP(CPU *cpu);
+void ASL_ZPX(CPU *cpu);
+void ASL_A(CPU *cpu);
+void ASL_AX(CPU *cpu);
 
 
 /* BCC */
