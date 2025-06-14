@@ -8,7 +8,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-extern RUNTIME_FLAGS flags;
+extern SYSTEM_FLAGS flags;
 
 
 struct SECTION_WITH_OPTS {
@@ -28,7 +28,7 @@ struct SECTION_OPTIONS {
 
 void print_parcer_dev_arr(PARCER_DEVICE *arr) {
     for (size_t i = 0; ; i++) {
-        printf("Name = \"%s\", DEV_TYPE = %d, Address_Begin = %d, Address_End = %d", arr[i].name, arr[i].type, arr[i].address_begin, arr[i].address_end);
+        printf("DEV_TYPE = %d, Address_Begin = %d, Address_End = %d", arr[i].type, arr[i].address_begin, arr[i].address_end);
         switch (arr[i].type) {
             case DEV_NONE:
                 log_warn("Encountered device of type DEV_NONE in parcer device array, %s:%d", __FILE__, __LINE__);
@@ -74,9 +74,12 @@ int str_starts_with_then_assignment(const char *str, const char *prefix) {
 
 
 /* gets the option specified following the rules of my not-toml */
-int get_option_from_buff(const char *buff, struct SECTION_WITH_OPTS section) {
-    for (size_t i = 0; buff[i] == ' ' || buff[i] == '#' || buff[i] == '\n'; i++) {
-        return -2;
+int get_option_from_buff(char const *buff, struct SECTION_WITH_OPTS section) {
+    for (size_t i = 0; buff[i] != '\0'; i++) {
+        if (buff[i] == ' ' || buff[i] == '\t')
+            continue;
+        if (buff[i] == '#' || buff[i] == '\n')
+            return -2;
     }
     for (int i = 0; i < section.num_opts; i++) {
         if (str_starts_with_then_assignment(buff, section.opts[i])) {
@@ -89,17 +92,37 @@ int get_option_from_buff(const char *buff, struct SECTION_WITH_OPTS section) {
 /* give pointer to first character of the "uint" */
 int get_uint_from_buff(const char *buff) {
     int num = 0;
-                        
-    for (size_t num_length = 0; num_length < strlen(buff); num_length++) {
+    int last_num = 0; /* for dealing with '_'*/
+    int do_break = 0;
+    for (size_t num_length = 0; num_length < strlen(buff) && !do_break; num_length++) {
         if (buff[num_length] < '0' || buff[num_length] > '9') {
-            if (buff[num_length] == '#') break;
-            if (buff[num_length] == '\n') break;
-            if (buff[num_length] == ' ') break;
+            if (buff[num_length] == '#') {
+                num_length = last_num;
+                do_break = 1;
+                break;
+            }
+            if (buff[num_length] == '\n') {
+                num_length = last_num;
+                do_break = 1;
+                break;
+            }
+            if (buff[num_length] == ' ') {
+                num_length = last_num;
+                do_break = 1;
+                break;
+            }
+            if (buff[num_length] == '\t') {
+                num_length = last_num;
+                do_break = 1;
+                break;
+            }
             if (buff[num_length] == '_') continue;
+            last_num = num_length;
             return -1;
+        } else {
+            num *= 10;
+            num += buff[num_length] - '0';
         }
-        num *= 10;
-        num += buff[num_length] - '0';
     }
     return num;
 }
@@ -270,7 +293,7 @@ PARCER_DEVICE *parce_file(const char *path) {
     section_options.sections[2] = (struct SECTION_WITH_OPTS) {
         .is_device = 1,
         .section = "rom",
-        .num_opts = 2,
+        .num_opts = 3,
         .opts = (char const *[]) {
             "address_begin",
             "address_end",
@@ -323,7 +346,7 @@ PARCER_DEVICE *parce_file(const char *path) {
                 if (device.type == DEV_ROM) {
                     if (device.dev_opts.rom_opts.path == NULL){
                         char const *def_path = "rom.bin";
-                        device.dev_opts.rom_opts.path = malloc(strlen(def_path) + 1)
+                        device.dev_opts.rom_opts.path = malloc(strlen(def_path) + 1);
                         strncpy(device.dev_opts.rom_opts.path, def_path, strlen(def_path) + 1);
                     }
                 }
@@ -414,10 +437,11 @@ PARCER_DEVICE *parce_file(const char *path) {
                 device.type = DEV_ROM;
 
                 switch (option_specifier) {
+                    int num;
                     case 0: {
                             num = get_uint_from_buff(value_position);
                             if (num == -1) {
-                                log_error("Invalid value for address_begin at %s:%d", path, line)
+                                log_error("Invalid value for address_begin at %s:%d", path, line);
                                 exit(1);
                             }
                             device.address_begin = num;
@@ -426,14 +450,14 @@ PARCER_DEVICE *parce_file(const char *path) {
                     case 1: {
                             num = get_uint_from_buff(value_position);
                             if (num == -1) {
-                                log_error("Invalid value for address_begin at %s:%d", path, line)
+                                log_error("Invalid value for address_begin at %s:%d", path, line);
                                 exit(1);
                             }
                             device.address_end = num;
                         break;
                     }
                     case 2: {
-                            const char *rom_path = get_string_from_buff(value_position);
+                            char *rom_path = get_string_from_buff(value_position);
                             if (access(rom_path, F_OK)) {
                                 log_error("ROM File not fount at \"%s\"", rom_path);
                                 exit(1);
@@ -459,7 +483,7 @@ PARCER_DEVICE *parce_file(const char *path) {
 void free_parcer_dev_arr(PARCER_DEVICE *arr) {
     for (size_t i = 0; ; i++) {
         if (arr[i].type == DEV_ROM) {
-            free(arr[i].dev_opts.rom_opts.path);
+            // free(arr[i].dev_opts.rom_opts.path);
         }
 
         if (arr[i].isArrayEnd) {

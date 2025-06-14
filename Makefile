@@ -1,7 +1,7 @@
 NAME = 6502
 
 CC = gcc
-CCFLAGS = -g -Wpedantic -Wall -Wextra -O3
+CFLAGS = -g -Wpedantic -Wall -Wextra -O3
 
 LINKFLAGS = 
 BINNAME = 
@@ -34,5 +34,5 @@ clean:
 $(OBJECTFILES): $(SOURCEFILES)
 	@printf "Compiling $@\n"
 	mkdir -p $(shell dirname "$@")
-	test $@ -nt $(shell echo "$@" | sed 's/\.o/\.c/g' | sed 's/build\/objects/src/g') || $(CC) -c $(shell echo "$@" | sed 's/\.o/\.c/g' | sed 's/build\/objects/src/g') -o $@ $(CCFLAGS)
+	test $@ -nt $(shell echo "$@" | sed 's/\.o/\.c/g' | sed 's/build\/objects/src/g') || $(CC) -c $(shell echo "$@" | sed 's/\.o/\.c/g' | sed 's/build\/objects/src/g') -o $@ $(CFLAGS)
 	@printf "Compiled $@\n\n"

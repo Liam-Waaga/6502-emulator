@@ -6,7 +6,7 @@
 #include <stdio.h>
 #include <time.h>
 
-extern RUNTIME_FLAGS flags;
+extern SYSTEM_FLAGS flags;
 
 
 

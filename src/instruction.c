@@ -333,7 +333,61 @@ void execute_instruction(CPU *cpu, unsigned char opcode) {
             schedule_clock_wait(2, 0);
             break;
         
+        case 0x88:
+            DEY_I(cpu);
+            cpu->PC += 1;
+            schedule_clock_wait(2, 0);
+            break;
         
+        case 0x49:
+            EOR_IM(cpu);
+            cpu->PC += 2;
+            schedule_clock_wait(2, 0);
+            break;
+        
+        case 0x45:
+            EOR_ZP(cpu);
+            cpu->PC += 2;
+            schedule_clock_wait(3, 0);
+            break;
+        
+        case 0x55:
+            EOR_ZPX(cpu);
+            cpu->PC += 2;
+            schedule_clock_wait(4, 0);
+            break;
+        
+        case 0x4D:
+            EOR_A(cpu);
+            cpu->PC += 3;
+            schedule_clock_wait(4, 0);
+            break;
+        
+        case 0x5D:
+            EOR_AX(cpu);
+            cpu->PC += 3;
+            schedule_clock_wait(4, 0);
+            break;
+        
+        case 0x59:
+            EOR_AY(cpu);
+            cpu->PC += 3;
+            schedule_clock_wait(4, 0);
+            break;
+        
+        case 0x41:
+            EOR_INX(cpu);
+            cpu->PC += 2;
+            schedule_clock_wait(6, 0);
+            break;
+        
+        case 0x51:
+            EOR_INY(cpu);
+            cpu->PC += 2;
+            schedule_clock_wait(5, 0);
+            break;
+        
+        /* TODO, add the rest of the official instruction opcodes */
 
         default:
             log_error("Opcode '%x' not found", opcode);

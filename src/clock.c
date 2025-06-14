@@ -4,7 +4,9 @@
 #include <stdint.h>
 #include <time.h>
 
-#define CYCLES_BETWEEN_SYNCS 50
+#ifndef CYCLES_BETWEEN_SYNCS
+#define CYCLES_BETWEEN_SYNCS 10
+#endif
 
 extern SYSTEM_FLAGS flags;
 
@@ -22,14 +24,14 @@ void clock_init(uint64_t hertz) {
     last_sync_ns = get_time_ns();
 }
 
-void clock_wait_cycles(uint64_t cycles, uint64_t clock_hz) {
-    uint64_t start = get_time_ns();
-    uint64_t wait_ns = (1000000000ULL * cycles) / clock_hz;
+// void clock_wait_cycles(uint64_t cycles, uint64_t clock_hz) {
+//     uint64_t start = get_time_ns();
+//     uint64_t wait_ns = (1000000000ULL * cycles) / clock_hz;
 
-    while (get_time_ns() - start < wait_ns) {
-        /* busy-wait loop */
-    }
-}
+//     while (get_time_ns() - start < wait_ns) {
+//         /* busy-wait loop */
+//     }
+// }
 
 void clock_sync_cycles(uint64_t cycles_elapsed, uint64_t clock_hz) {
     uint64_t now = get_time_ns();

@@ -4,7 +4,7 @@
 #include <stdlib.h>
 #include <unistd.h>
 
-extern RUNTIME_FLAGS flags;
+extern SYSTEM_FLAGS flags;
 
 RAM *ram_init(int size) {
     RAM *ram = malloc(sizeof(RAM));

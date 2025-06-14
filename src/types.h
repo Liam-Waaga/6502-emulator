@@ -21,9 +21,9 @@ typedef struct {
 } SYSTEM_FLAGS;
 
 typedef enum {
-    DEV_NONE,
-    DEV_ROM,
-    DEV_RAM,
+    DEV_NONE = 0,
+    DEV_ROM = 1,
+    DEV_RAM = 2,
 } DEV_TYPE;
 
 
