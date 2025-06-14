@@ -6,7 +6,8 @@
 
 
 #include "ram.h"
-#include "../log/log.h"
+#include "log.h"
+#include "types.h"
 
 #include <stdlib.h>
 #include <unistd.h>
@@ -27,7 +28,7 @@ void ram_deinit(RAM *ram) {
 }
 
 Word_t ram_read_word(RAM *ram, Word_t address) {
-    if (address + 1 > ram->size) {
+    if ((size_t)address + 1 >= ram->size) {
         log_error("attempted to access ram memory at address %d with ram size %d, %s:%d", address, ram->size, __FILE__, __LINE__);
         exit(1);
     }
@@ -35,7 +36,7 @@ Word_t ram_read_word(RAM *ram, Word_t address) {
 }
 
 Byte_t ram_read_byte(RAM *ram, Word_t address) {
-    if (address > ram->size) {
+    if (address >= ram->size) {
         log_error("Attempted to access ram memory at address %d with ram size %d, %s:%d", address, ram->size, __FILE__, __LINE__);
         exit(1);
     }
@@ -43,7 +44,7 @@ Byte_t ram_read_byte(RAM *ram, Word_t address) {
 }
 
 void ram_write_word(RAM *ram, Word_t address, Word_t value) {
-    if (address + 1 > ram->size) {
+    if ((size_t)address + 1 >= ram->size) {
         log_error("Attempted to write to address %d with ram size %d, %s:%d", address, ram->size, __FILE__, __LINE__);
         exit(1);
     }
@@ -52,7 +53,7 @@ void ram_write_word(RAM *ram, Word_t address, Word_t value) {
 
 
 void ram_write_byte(RAM *ram, Word_t address, Byte_t value) {
-    if (address > ram->size - 1) {
+    if (address >= ram->size) {
         log_error("Attempted to write to address %d with ram size %d, %s:%d", address, ram->size, __FILE__, __LINE__);
         exit(1);
     }

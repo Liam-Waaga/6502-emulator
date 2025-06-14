@@ -80,18 +80,24 @@ void vm_register_device(ADDR_SPACE *address_space, DEVICE device) {
 
 void device_deinit(DEVICE device) {
     switch (device.type) {
-        case DEV_NONE:
+        case DEV_NONE: {
             log_warn("Can't deinit device of type DEV_NONE, %s:%d", __FILE__, __LINE__);
             break;
-        case DEV_RAM:
+        }
+        case DEV_RAM: {
             ram_deinit(device.device.ram);
+            device.device.ram = NULL;
             break;
-        case DEV_ROM:
+        }
+        case DEV_ROM: {
             rom_deinit(device.device.rom);
+            device.device.rom = NULL;
             break;
-        default:
+        }
+        default: {
             log_warn("Can't deinit device of unkown type");
             break;
+        }
     }
 }
 

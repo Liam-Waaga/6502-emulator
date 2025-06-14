@@ -691,6 +691,9 @@ void BPL_R(CPU *cpu) {
 }
 
 
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wunused-parameter"
+
 /* BRK */
 
 void BRK_R(CPU *cpu) {
@@ -698,6 +701,7 @@ void BRK_R(CPU *cpu) {
     exit(1);
 }
 
+#pragma GCC diagnostic pop
 
 /* BVC */
 

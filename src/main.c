@@ -16,6 +16,7 @@
 #include <string.h>
 #include <stdlib.h>
 #include <stdio.h>
+#include <getopt.h>
 
 #ifndef GIT_LINK
 #error GIT_LINK not defined, define with -D... in build system.
@@ -51,14 +52,24 @@ _Noreturn void usage(char const * const argv0) {
     exit(0);
 }
 
+static const struct option cmd_options[] = {
+    {"help",    optional_argument, NULL, 'h'},
+    {"license", optional_argument, NULL, 'l'},
+    {0, 0, 0, 0}
+};
+
 int main(int argc, char **argv) {
     printf("%s", LICENSE_MESSAGE);
         
     char *memconfig_file = DEF_MEMCONFIG_FILE_PATH;
-    /* TODO, process command line args properly */
-    if (argc != 1) {
-        for (int i = 1; i < argc; i++) {
-            if (strcmp("--license", argv[i]) == 0) {
+    
+    int opt;
+    while ((opt = getopt_long(argc, argv, "h", cmd_options, NULL)) != -1) {
+        switch (opt) {
+            case 'h': {
+                usage(argv[0]);
+            }
+            case 'l': {
                 printf("%s\n\n", FULL_LICENSE);
                 printf(
                     "END OF LICENSE TEXT\n"
@@ -68,23 +79,22 @@ int main(int argc, char **argv) {
                 );
                 exit(0);
             }
-            if (strcmp("-h", argv[i]) == 0 || strcmp("--help", argv[i]) == 0) {
-                usage(argv[0]);
-            } else {
-                memconfig_file = argv[i];
-            }
         }
     }
+
     PARCER_DEVICE *parcer_arr = parce_file(memconfig_file);
-    print_parcer_dev_arr(parcer_arr);
+    // print_parcer_dev_arr(parcer_arr);
 
     ADDR_SPACE *addr = addr_init(parcer_arr);
     CPU *cpu = cpu_init(addr);
 
-    /* idk i forgot whats going on, so this ig */
+    /* TODO, in the future, add an exit condition (make a ui, whether it is a tui, commandline, gui, etc, i haven't decided) */
     while (1) {
         execute_instruction(cpu, vm_read_byte(cpu->address_space, cpu->PC));
     }
+
+    cpu_deinit(cpu);
+    cpu = NULL;
 
     free_parcer_dev_arr(parcer_arr);
     return 0;
