@@ -1,494 +1,228 @@
+/* 
+ * GNU GPLv3 License - see LICENSE.md at project root for terms.
+ * If for any reason this file has been separated from the license text,
+ * see LICENSE.md file in the git repo at https://github.com/da-ostrich-king/6502-emulator/blob/main/LICENSE.md
+ */
+
+
 #include "parcer.h"
 #include "log/log.h"
 #include "types.h"
 
-#include <stddef.h>
 #include <stdio.h>
-#include <unistd.h>
 #include <stdlib.h>
 #include <string.h>
+#include <unistd.h>
+#include <ctype.h>
 
 extern SYSTEM_FLAGS flags;
 
+#define MAX_LINE_LENGTH 1024
 
-struct SECTION_WITH_OPTS {
-    int is_device;
-    char const *section;
-    int num_opts;
-    char const **opts;
-};
-
-
-struct SECTION_OPTIONS {
-    int section_count;
-    struct SECTION_WITH_OPTS *sections;
-};
-
-
-
-void print_parcer_dev_arr(PARCER_DEVICE *arr) {
-    for (size_t i = 0; ; i++) {
-        printf("DEV_TYPE = %d, Address_Begin = %d, Address_End = %d", arr[i].type, arr[i].address_begin, arr[i].address_end);
-        switch (arr[i].type) {
-            case DEV_NONE:
-                log_warn("Encountered device of type DEV_NONE in parcer device array, %s:%d", __FILE__, __LINE__);
-                printf("\n");
-                break;
-            case DEV_ROM:
-                printf(", Path = \"%s\"\n", arr[i].dev_opts.rom_opts.path);
-                break;
-            case DEV_RAM:
-                printf("\n");
-                break;
-        }
-        if (arr[i].isArrayEnd) {
-            break;
-        }
-    }
-}
-
-
-
-/* purely exists to stop compiler warnings */
-void nothing(void) {
-    return;
-}
-
-
-/* checks if str starts with prefix, then the next character is a ' ' or a '=' */
-int str_starts_with_then_assignment(const char *str, const char *prefix) {
-    size_t len_prefix = strlen(prefix);
-    size_t len_str = strlen(str);
-    int assignement_after_prefix = 0;
-    for (size_t i = len_prefix; i < len_str; i++) {
-        if (str[i] == '=') {
-            assignement_after_prefix = 1;
-        }
-        if (str[i] != ' ' && str[i] != '\t') {
-            break;
-        }
-    }
-    return len_str >= len_prefix && strncmp(str, prefix, len_prefix) == 0 && assignement_after_prefix;
-}
-
-
-
-/* gets the option specified following the rules of my not-toml */
-int get_option_from_buff(char const *buff, struct SECTION_WITH_OPTS section) {
-    for (size_t i = 0; buff[i] != '\0'; i++) {
-        if (buff[i] == ' ' || buff[i] == '\t')
-            continue;
-        if (buff[i] == '#' || buff[i] == '\n')
-            return -2;
-    }
-    for (int i = 0; i < section.num_opts; i++) {
-        if (str_starts_with_then_assignment(buff, section.opts[i])) {
-            return i;
-        }
-    }
-    return -1;
-}
-
-/* give pointer to first character of the "uint" */
-int get_uint_from_buff(const char *buff) {
+/*--------------------------------------------------------------------
+ * parse_uint
+ *   Accepts decimal numbers that may contain underscores for readability.
+ *   Stops parsing at the first '#' (comment) or any whitespace character.
+ *   Returns -1 on any non‑digit character (other than '_' or allowed
+ *   whitespace/comments) or if no digits are found.
+ *-------------------------------------------------------------------*/
+static int parse_uint(const char *s) {
     int num = 0;
-    int last_num = 0; /* for dealing with '_'*/
-    int do_break = 0;
-    for (size_t num_length = 0; num_length < strlen(buff) && !do_break; num_length++) {
-        if (buff[num_length] < '0' || buff[num_length] > '9') {
-            if (buff[num_length] == '#') {
-                num_length = last_num;
-                do_break = 1;
-                break;
-            }
-            if (buff[num_length] == '\n') {
-                num_length = last_num;
-                do_break = 1;
-                break;
-            }
-            if (buff[num_length] == ' ') {
-                num_length = last_num;
-                do_break = 1;
-                break;
-            }
-            if (buff[num_length] == '\t') {
-                num_length = last_num;
-                do_break = 1;
-                break;
-            }
-            if (buff[num_length] == '_') continue;
-            last_num = num_length;
-            return -1;
-        } else {
-            num *= 10;
-            num += buff[num_length] - '0';
+    int found_digit = 0;
+
+    while (*s) {
+        if (*s == '#') break;               /* comment begins – stop */
+        if (isspace((unsigned char)*s)) {   /* space / tab / newline – stop */
+            break;
         }
+        if (*s == '_') {
+            s++;                            /* skip visual separators */
+            continue;
+        }
+        if (isdigit((unsigned char)*s)) {
+            found_digit = 1;
+            num = num * 10 + (*s - '0');
+            s++;
+            continue;
+        }
+        return -1;                          /* invalid character */
     }
-    return num;
+
+    return found_digit ? num : -1;          /* -1 if nothing parsed */
 }
 
-// char *get_string_from_buff(char const * buff) {
-//     size_t string_len = 0;
-//     int is_quoted = buff[0] == '"';
-//     if (is_quoted) {
-//         buff++;
-//         int i = 0;
-//         int is_escape;
-//         while (1) {
-//             if (buff[i] == '\\') {
-//                 is_escape = !is_escape;
-//             }
-//             if (buff[i] == '"') {
-//                 if (!is_escape) {
+/*--------------------------------------------------------------------
+ * parse_string
+ *   Handles quoted ("...") and unquoted strings. Leading spaces and '='
+ *   are skipped by the caller. For quoted strings, everything up to the
+ *   closing quote is copied verbatim; for unquoted, copy until whitespace
+ *   or comment. Caller must free the returned string.
+ *-------------------------------------------------------------------*/
+static char *parse_string(const char *s) {
+    while (isspace((unsigned char)*s) || *s == '=') s++;
 
-//                     break;
-//                 }
-//             }
-//             if (is_escape) {
-//                 switch (buff[i]) {
-//                     case 'n':
+    if (*s == '"') {                       /* quoted string */
+        s++;                                /* skip opening quote */
+        const char *end = strchr(s, '"');
+        if (!end) return NULL;              /* unterminated quote */
+        size_t len = (size_t)(end - s);
+        char *out = malloc(len + 1);
+        if (!out) {
+            log_error("Allocation failed in parse_string");
+            exit(1);
+        }
+        memcpy(out, s, len);
+        out[len] = '\0';
+        return out;
+    }
 
-//                 }
-//             }
-//             i++;
-//             string_len++;
-//         }
-//     } else {
-//         for (; buff[string_len] != ' ' && buff[string_len] != '\t' && buff[string_len] != '#'; string_len++ );
-//         string_len++;
-//     }
-
-//     char *buffer = malloc(string_len + 1);
-//     if (buffer == NULL) {
-//         log_error("Allocation failed, %s:%d", __FILE__, __LINE__);
-//         exit(1);
-//     }
-//     strncpy(buffer, buff, string_len);
-//     buffer[string_len] = '\0';
-//     return buffer;
-// }
-
-
-/* Parses a string with escapes, supports quoted and unquoted strings.
-   Returns malloc'ed string with escapes processed.
-   Caller must free. */
-char *get_string_from_buff(const char *buff) {
-    const char *p = buff;
-    char *output;
-    size_t out_capacity = 64;  // initial output buffer size
-    size_t out_len = 0;
-
-    output = malloc(out_capacity);
-    if (!output) {
-        log_error("Allocation failed at %s:%d", __FILE__, __LINE__);
+    /* unquoted */
+    const char *end = s;
+    while (*end && !isspace((unsigned char)*end) && *end != '#') end++;
+    size_t len = (size_t)(end - s);
+    char *out = malloc(len + 1);
+    if (!out) {
+        log_error("Allocation failed in parse_string");
         exit(1);
     }
-
-    int is_quoted = (*p == '"');
-    if (is_quoted) {
-        p++;  // skip opening quote
-
-        while (*p) {
-            if (*p == '"') {
-                // end of quoted string
-                p++;
-                break;
-            }
-
-            if (*p == '\\') {
-                p++; // skip backslash
-                if (*p == '\0') break; // premature end
-
-                // Handle escaped newline (line continuation)
-                if (*p == '\n' || *p == '\r') {
-                    // skip all newline chars (handle \r\n)
-                    if (*p == '\r' && *(p+1) == '\n') p++;
-                    p++;
-                    continue; // don't output anything for line continuation
-                }
-
-                switch (*p) {
-                    case 'n': output[out_len++] = '\n'; break;
-                    case 'r': output[out_len++] = '\r'; break;
-                    case 't': output[out_len++] = '\t'; break;
-                    case '\\': output[out_len++] = '\\'; break;
-                    case '"': output[out_len++] = '"'; break;
-                    case '0': output[out_len++] = '\0'; break;
-                    // Add other escapes if needed
-                    default:
-                        // Unknown escape, copy literally (or handle error)
-                        output[out_len++] = *p;
-                        break;
-                }
-                p++;
-            } else {
-                output[out_len++] = *p++;
-            }
-
-            // Resize output buffer if needed
-            if (out_len + 1 >= out_capacity) {
-                out_capacity *= 2;
-                char *tmp = realloc(output, out_capacity);
-                if (!tmp) {
-                    free(output);
-                    fprintf(stderr, "Allocation failed\n");
-                    exit(1);
-                }
-                output = tmp;
-            }
-        }
-    } else {
-        // unquoted string, ends at space, tab, or '#'
-        while (*p && *p != ' ' && *p != '\t' && *p != '#') {
-            // copy literally, no escapes in unquoted strings by default
-            output[out_len++] = *p++;
-
-            if (out_len + 1 >= out_capacity) {
-                out_capacity *= 2;
-                char *tmp = realloc(output, out_capacity);
-                if (!tmp) {
-                    free(output);
-                    fprintf(stderr, "Allocation failed\n");
-                    exit(1);
-                }
-                output = tmp;
-            }
-        }
-    }
-
-    output[out_len] = '\0';
-    return output;
+    memcpy(out, s, len);
+    out[len] = '\0';
+    return out;
 }
 
 PARCER_DEVICE *parce_file(const char *path) {
-    FILE *config = fopen(path, "r");
-    if (config == NULL) {
-        log_error("Open file error, file path \"%s\"", path);
-        exit(1);
-    };
-
-    
-    struct SECTION_OPTIONS section_options = {
-        .section_count = 3,
-    };
-    section_options.sections = malloc(sizeof(struct SECTION_WITH_OPTS) * section_options.section_count);
-    section_options.sections[0] = (struct SECTION_WITH_OPTS) {
-        .is_device = 0,
-        .section = "system",
-        .num_opts = 2,
-        .opts = (char const *[]) {
-            "clock_speed",
-            "loglevel"
-        }
-    };
-    section_options.sections[1] = (struct SECTION_WITH_OPTS) {
-        .is_device = 1,
-        .section = "ram",
-        .num_opts = 2,
-        .opts = (char const *[]) {
-            "address_begin",
-            "address_end"
-        }
-    };
-    section_options.sections[2] = (struct SECTION_WITH_OPTS) {
-        .is_device = 1,
-        .section = "rom",
-        .num_opts = 3,
-        .opts = (char const *[]) {
-            "address_begin",
-            "address_end",
-            "path"
-        }
-    };
-
-    /* other options */
-    PARCER_DEVICE *dev_settings_arr = malloc(sizeof(PARCER_DEVICE));
-    size_t dev_arr_used = 0;
-    size_t dev_arr_allocated = 1;
-    PARCER_DEVICE device;
-    memset(&device, 0, sizeof(PARCER_DEVICE));
-
-    if (dev_settings_arr == NULL) {
-        log_error("Allocation error, %s:%d", __FILE__, __LINE__);
+    FILE *file = fopen(path, "r");
+    if (!file) {
+        log_error("Cannot open config file: %s", path);
         exit(1);
     }
 
-    char buff[1024];
-    int section_specifier = -1;
-    int option_specifier = -1;
+    PARCER_DEVICE *devices = NULL;
+    size_t device_count = 0;
+    PARCER_DEVICE current_device = {0};
+    int in_device = 0;
 
-    size_t line = 0;
+    char line[MAX_LINE_LENGTH];
+    while (fgets(line, sizeof(line), file)) {
+        /* Skip initial whitespace */
+        char *trim = line;
+        while (isspace((unsigned char)*trim)) trim++;
 
-    int is_making_device = 0;
+        /* Skip comments / empty lines */
+        if (*trim == '#' || *trim == '\0' || *trim == '\n') continue;
 
-    while (fgets(buff, sizeof(buff), config)) {
-        line++;
-        if (!strchr(buff, '\n') && !feof(config))
-            log_error("Line %d is too long in \"%s\"", line, path);
-        if (buff[0] == '[') {
-            for (int i = 0; i < section_options.section_count; i++) {
-                if (strncmp(buff + 1, section_options.sections[i].section, strlen(section_options.sections[i].section)) == 0) {
-                    section_specifier = i;
-                    goto LOOP_END;
+        /* Section headers */
+        if (*trim == '[') {
+            /* If we were inside a device section, flush the device */
+            if (in_device) {
+                devices = realloc(devices, sizeof(PARCER_DEVICE) * (device_count + 1));
+                if (!devices) {
+                    log_error("realloc failed while adding device");
+                    exit(1);
                 }
+                devices[device_count++] = current_device;
+                memset(&current_device, 0, sizeof(PARCER_DEVICE));
             }
-            if (is_making_device == 1) {
-                if (dev_arr_used == dev_arr_allocated) {
-                    PARCER_DEVICE *tmp = realloc(dev_settings_arr, sizeof(PARCER_DEVICE) * (dev_arr_allocated *= 2));
-                    if (tmp == NULL) {
-                        log_error("realloc fail at %s:%d", __FILE__, __LINE__);
-                        exit(1);
-                    }
-                    dev_settings_arr = tmp;
-                }
 
-                /* set some device defaults */
-                if (device.type == DEV_ROM) {
-                    if (device.dev_opts.rom_opts.path == NULL){
-                        char const *def_path = "rom.bin";
-                        device.dev_opts.rom_opts.path = malloc(strlen(def_path) + 1);
-                        strncpy(device.dev_opts.rom_opts.path, def_path, strlen(def_path) + 1);
-                    }
-                }
-                device.isArrayEnd = 0;
-                dev_settings_arr[dev_arr_used++] = device;
-                memset(&device, 0, sizeof(PARCER_DEVICE));
+            if (strncmp(trim, "[ram]", 5) == 0) {
+                current_device.type = DEV_RAM;
+                in_device = 1;
+            } else if (strncmp(trim, "[rom]", 5) == 0) {
+                current_device.type = DEV_ROM;
+                in_device = 1;
+            } else {
+                in_device = 0; /* system or unknown – handled outside devices */
             }
-        }
-        
-        if (section_specifier >= section_options.section_count) {
-            log_error("Section specifier refers to section that does not exist, %s:%d, %s:%d", path, line, __FILE__, __LINE__);
-            exit(1);
+            continue;
         }
 
-        option_specifier = get_option_from_buff(buff, section_options.sections[section_specifier]);
+        /* Key‑value parsing */
+        char *eq = strchr(trim, '=');
+        if (!eq) continue;                 /* malformed line */
 
-        if (option_specifier == -1) {
-            log_error("Unknown option at %s:%d", path, line);
-            exit(1);
-        }
-        if (option_specifier == -2) {
-            goto LOOP_END;
-        }
+        *eq = '\0';
+        char *key = trim;
+        char *val = eq + 1;
 
-        char *value_position = (char *) buff + strlen(section_options.sections[section_specifier].opts[option_specifier]) + 1;
-        for (; *value_position == ' ' || *value_position == '=' || *value_position == '\t'; value_position++);
-        
-        switch (section_specifier) {
+        /* Trim key */
+        while (isspace((unsigned char)*key)) key++;
+        char *key_end = key + strlen(key);
+        while (key_end > key && isspace((unsigned char)*(key_end - 1))) *(--key_end) = '\0';
 
-            case 0: {
-                is_making_device = section_options.sections[0].is_device; /* system settings */
+        while (isspace((unsigned char)*val)) val++;
 
-
-
-                switch (option_specifier) {
-                    case 0: /* clock_speed */
-                        nothing();
-                        int num = get_uint_from_buff(value_position);
-                        if (num == -1) {
-                            log_error("Invalid value for clock speed at line %d", line);
-                            exit(1);
-                        }
-                        flags.clock_speed = num;
-                        break;
-                    case 1: /* loglevel */
-                        nothing();
-                        int log_level = get_uint_from_buff(value_position);
-                        if (log_level > 2 || log_level < 0) {
-                            log_error("Invalid value for loglevel at %s:%d, 0 for error, 1 for warn, 2 for info", path, line);
-                            exit(1);
-                        }
-                        flags.loglevel = log_level;
-                        break;
+        if (!in_device) {
+            /* System‑wide options */
+            if (strcmp(key, "loglevel") == 0) {
+                int lvl = parse_uint(val);
+                if (lvl < 0 || lvl > 2) {
+                    log_error("Invalid loglevel value in %s", path);
+                    exit(1);
                 }
-                break;
-            }
-            case 1: {
-                is_making_device = section_options.sections[1].is_device; /* ram is a device, unlike system settings */
-
-                device.type = DEV_RAM;
-
-                switch (option_specifier) {
-                    int num;
-                    case 0: /* address_begin */
-                        nothing();
-                        num = get_uint_from_buff(value_position);
-                        if (num == -1) {
-                            log_error("Invalid value for address_begin at %s:%d", path, line);
-                            exit(1);
-                        }
-                        device.address_begin = num;
-                        break;
-                    case 1: /* address_end */
-                        nothing();
-                        num = get_uint_from_buff(value_position);
-                        if (num == -1) {
-                            log_error("Invalid value for address_end at %s:%d", path, line);
-                            exit(1);
-                        }
-                        device.address_end = num;
-                        break;
-
+                flags.loglevel = lvl;
+            } else if (strcmp(key, "clock_speed") == 0) {
+                int speed = parse_uint(val);
+                if (speed < 0) {
+                    log_error("Invalid clock_speed value in %s", path);
+                    exit(1);
                 }
-                break;
+                flags.clock_speed = speed;
             }
-            case 2: {
-                is_making_device = section_options.sections[2].is_device;
-                device.type = DEV_ROM;
-
-                switch (option_specifier) {
-                    int num;
-                    case 0: {
-                            num = get_uint_from_buff(value_position);
-                            if (num == -1) {
-                                log_error("Invalid value for address_begin at %s:%d", path, line);
-                                exit(1);
-                            }
-                            device.address_begin = num;
-                        break;
-                    }
-                    case 1: {
-                            num = get_uint_from_buff(value_position);
-                            if (num == -1) {
-                                log_error("Invalid value for address_begin at %s:%d", path, line);
-                                exit(1);
-                            }
-                            device.address_end = num;
-                        break;
-                    }
-                    case 2: {
-                            char *rom_path = get_string_from_buff(value_position);
-                            if (access(rom_path, F_OK)) {
-                                log_error("ROM File not fount at \"%s\"", rom_path);
-                                exit(1);
-                            }
-                            device.dev_opts.rom_opts.path = rom_path;
-                        break;
-                    }
-                }
-                break;
-            }
+            continue;
         }
 
-        LOOP_END:
-        nothing();
+        /* Device‑specific options */
+        if (strcmp(key, "address_begin") == 0) {
+            current_device.address_begin = parse_uint(val);
+        } else if (strcmp(key, "address_end") == 0) {
+            current_device.address_end = parse_uint(val);
+        } else if (strcmp(key, "path") == 0 && current_device.type == DEV_ROM) {
+            char *str = parse_string(val);
+            if (!str || access(str, F_OK) != 0) {
+                log_error("ROM file not found: %s", str ? str : val);
+                exit(1);
+            }
+            current_device.dev_opts.rom_opts.path = str;
+        }
     }
 
-    dev_settings_arr[dev_arr_used - 1].isArrayEnd = 1;
-    
-    return dev_settings_arr;
+    /* Flush the final device if we were in one */
+    if (in_device) {
+        devices = realloc(devices, sizeof(PARCER_DEVICE) * (device_count + 1));
+        if (!devices) {
+            log_error("realloc failed while finalising devices");
+            exit(1);
+        }
+        devices[device_count++] = current_device;
+    }
+
+    /* Mark the array end */
+    if (device_count > 0) {
+        devices[device_count - 1].isArrayEnd = 1;
+    }
+
+    fclose(file);
+    return devices;
 }
 
-
 void free_parcer_dev_arr(PARCER_DEVICE *arr) {
-    for (size_t i = 0; ; i++) {
+    if (!arr) return;
+    for (size_t i = 0;; i++) {
         if (arr[i].type == DEV_ROM) {
-            // free(arr[i].dev_opts.rom_opts.path);
+            free(arr[i].dev_opts.rom_opts.path);
         }
-
-        if (arr[i].isArrayEnd) {
-            break;
-        }
+        if (arr[i].isArrayEnd) break;
     }
     free(arr);
+}
+
+void print_parcer_dev_arr(PARCER_DEVICE *arr) {
+    for (size_t i = 0;; i++) {
+        printf("DEV_TYPE = %d, Address_Begin = %d, Address_End = %d", arr[i].type, arr[i].address_begin, arr[i].address_end);
+        if (arr[i].type == DEV_ROM) {
+            printf(", Path = \"%s\"", arr[i].dev_opts.rom_opts.path);
+        }
+        printf("\n");
+        if (arr[i].isArrayEnd) break;
+    }
 }

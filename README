@@ -12,6 +12,7 @@ Doesn't support windows, becuase windows programming is paingful, and I don't us
 - Add opcodes of implemented instructions to switch statement
 - Implement extended waits (ex, +1 clock if page crossed, +1 if branch, etc)
 - Add undocumented opcodes
+- Process command line args well
 
 # Example
 

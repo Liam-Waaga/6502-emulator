@@ -1,3 +1,10 @@
+/* 
+ * GNU GPLv3 License - see LICENSE.md at project root for terms.
+ * If for any reason this file has been separated from the license text,
+ * see LICENSE.md file in the git repo at https://github.com/da-ostrich-king/6502-emulator/blob/main/LICENSE.md
+ */
+
+
 #ifndef TYPES_H
 #define TYPES_H
 
