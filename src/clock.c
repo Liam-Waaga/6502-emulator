@@ -27,7 +27,7 @@ static uint64_t get_time_ns(void) {
     return (uint64_t)now.tv_sec * 1000000000ULL + now.tv_nsec;
 }
 
-void clock_init(uint64_t hertz) {
+void clock_init() {
     last_sync_ns = get_time_ns();
 }
 

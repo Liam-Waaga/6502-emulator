@@ -11,7 +11,7 @@
 
 /* sets the clock speed in herts */
 /* set to zero to use system clock speed */
-void clock_init(uint64_t hertz);
+void clock_init();
 
 
 /* Busy-wait for a number of cycles at a given clock frequency */

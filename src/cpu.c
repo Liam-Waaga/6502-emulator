@@ -34,7 +34,7 @@ CPU *cpu_init(ADDR_SPACE *address_space) {
     cpu->SP = 0x0100;
 
     log_info("Initializing clock");
-    clock_init(flags.clock_speed);
+    clock_init();
     return cpu;
 }
 
