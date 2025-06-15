@@ -5,11 +5,15 @@
       "name": "C/C++ Runner: Debug Session",
       "type": "cppdbg",
       "request": "launch",
-      "args": [],
+      "args": [
+        "--loglevel",
+        "info",
+        "memconfig.conf",
+      ],
       "stopAtEntry": false,
       "externalConsole": false,
-      "cwd": "/home/liam/clone/6502-emulator/src",
-      "program": "/home/liam/clone/6502-emulator/src/build/Debug/outDebug",
+      "cwd": "${workspaceFolder}/example/hello world/",
+      "program": "${workspaceFolder}/build/6502",
       "MIMode": "gdb",
       "miDebuggerPath": "gdb",
       "setupCommands": [

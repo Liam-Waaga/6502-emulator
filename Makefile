@@ -3,7 +3,7 @@ GIT_LINK = https://github.com/da-ostrich-king/6502-emulator
 
 
 CC = gcc
-CFLAGS = -g -Wpedantic -Wall -Wextra -O3 -std=c23
+CFLAGS = -g -Wpedantic -Wall -Wextra -std=c23
 CFLAGS += -D_POSIX_C_SOURCE=199309L
 CFLAGS += -DGIT_LINK=\"$(GIT_LINK)\"
 CFLAGS += -Isrc -Isrc/devices -Isrc/log

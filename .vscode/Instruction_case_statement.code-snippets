@@ -26,6 +26,7 @@
 			"\tbreak;",
 			"",
 			""
-		]
+		],
+		"description": "Add a case to the opcode switch statement in instruction.c, temporary snippet",
 	}
 }
