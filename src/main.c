@@ -13,6 +13,7 @@
 #include "mem.h"
 #include "parcer.h"
 
+#include <bits/getopt_core.h>
 #include <string.h>
 #include <stdlib.h>
 #include <stdio.h>
@@ -42,34 +43,69 @@ const char FULL_LICENSE[] = {
 };
 
 _Noreturn void usage(char const * const argv0) {
-    printf("Usage: %s\n", argv0);
-    printf("       %s <file>\n", argv0);
-    printf("       ./<file> # with shebang\n");
-    printf("\n");
-    printf("Arguments:\n");
-    printf("    --help  -h    Show this message\n");
-    printf("    --license     Display license details\n");
+    printf(
+        "Usage: %s\n"
+        "       %s <file>\n"
+        "\n"
+        "Arguments:\n"
+        "    -h  --help\n"
+        "                    Show this message\n"
+        "        --license\n"
+        "                    Display license details\n"
+        "        --loglevel [quiet,error,warn,info]\n"
+        "                    Sets loglevel, overrides the loglevel in memconfig\n"
+        "\n"
+        , argv0, argv0
+    );
     exit(0);
 }
 
+enum CMD_ARG_IDENT {
+    ARG_HELP = 0,
+    ARG_LICENSE,
+    ARG_LOGLEVEL
+};
+
 static const struct option cmd_options[] = {
-    {"help",    optional_argument, NULL, 'h'},
-    {"license", optional_argument, NULL, 'l'},
+    {"help",       no_argument,       NULL, ARG_HELP},
+    {"license",    no_argument,       NULL, ARG_LICENSE},
+    {"loglevel",   required_argument, NULL, ARG_LOGLEVEL},
     {0, 0, 0, 0}
 };
 
+LOGLEVEL parce_loglevel(const char *arg) {
+    if (strcmp(arg, "quiet") == 0) {
+        return LOG_QUIET;
+    } else if (strcmp(arg, "error") == 0) {
+        return LOG_ERROR;
+    } else if (strcmp(arg, "warn") == 0) {
+        return LOG_WARN;
+    } else if (strcmp(arg, "info") == 0) {
+        return LOG_INFO;
+    } else {
+        log_error("Unknown log level: %s\n", arg);
+        exit(1);
+    }
+}
+
 int main(int argc, char **argv) {
-    printf("%s", LICENSE_MESSAGE);
+
+    for (int i = 0; i < argc; i++) {
+        printf("%s\n", argv[i]);
+    }
+
+    flags.loglevel = LOG_NONE;
         
-    char *memconfig_file = DEF_MEMCONFIG_FILE_PATH;
+    char *memconfig_file = malloc(strlen(DEF_MEMCONFIG_FILE_PATH) + 1);
+    strncpy(memconfig_file, DEF_MEMCONFIG_FILE_PATH, strlen(DEF_MEMCONFIG_FILE_PATH) + 1);
     
     int opt;
     while ((opt = getopt_long(argc, argv, "h", cmd_options, NULL)) != -1) {
         switch (opt) {
-            case 'h': {
+            case ARG_HELP: {
                 usage(argv[0]);
             }
-            case 'l': {
+            case ARG_LICENSE: {
                 printf("%s\n\n", FULL_LICENSE);
                 printf(
                     "END OF LICENSE TEXT\n"
@@ -79,12 +115,29 @@ int main(int argc, char **argv) {
                 );
                 exit(0);
             }
+            case ARG_LOGLEVEL: {
+                flags.loglevel = parce_loglevel(optarg);
+            }
         }
     }
 
+    if (argc - optind > 0) {
+        size_t len = strlen(argv[optind]) + 1;
+        char *tmp = realloc(memconfig_file, len);
+        if (!tmp) {
+            log_error("Allocation failure at %s:%d", __FILE__, __LINE__);
+            exit(1);
+        }
+        strncpy(tmp, argv[optind], len);
+        memconfig_file = tmp;
+    }
+    
     PARCER_DEVICE *parcer_arr = parce_file(memconfig_file);
-    // print_parcer_dev_arr(parcer_arr);
+    print_parcer_dev_arr(parcer_arr);
 
+    if (flags.loglevel > LOG_QUIET)
+        printf("%s", LICENSE_MESSAGE);
+    
     ADDR_SPACE *addr = addr_init(parcer_arr);
     CPU *cpu = cpu_init(addr);
 

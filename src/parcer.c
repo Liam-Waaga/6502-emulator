@@ -102,8 +102,11 @@ PARCER_DEVICE *parce_file(const char *path) {
     PARCER_DEVICE current_device = {0};
     int in_device = 0;
 
+    size_t line_number = 0;
+
     char line[MAX_LINE_LENGTH];
     while (fgets(line, sizeof(line), file)) {
+        line_number++;
         /* Skip initial whitespace */
         char *trim = line;
         while (isspace((unsigned char)*trim)) trim++;
@@ -154,12 +157,23 @@ PARCER_DEVICE *parce_file(const char *path) {
         if (!in_device) {
             /* System‑wide options */
             if (strcmp(key, "loglevel") == 0) {
-                int lvl = parse_uint(val);
-                if (lvl < 0 || lvl > 2) {
-                    log_error("Invalid loglevel value in %s", path);
+                LOGLEVEL level;
+                char *level_buff = parse_string(val);
+
+                if (strcmp(level_buff, "error")) {
+                    level = LOG_ERROR;
+                } else if (strcmp(level_buff, "warn")) {
+                    level = LOG_WARN;
+                } else if (strcmp(level_buff, "info")) {
+                    level = LOG_INFO;
+                } else {
+                    log_error("Invalid value for loglevel \"%s\"", level_buff);
                     exit(1);
                 }
-                flags.loglevel = lvl;
+
+                if (flags.loglevel == LOG_NONE) {
+                    flags.loglevel = level;
+                }
             } else if (strcmp(key, "clock_speed") == 0) {
                 int speed = parse_uint(val);
                 if (speed < 0) {
@@ -174,8 +188,16 @@ PARCER_DEVICE *parce_file(const char *path) {
         /* Device‑specific options */
         if (strcmp(key, "address_begin") == 0) {
             current_device.address_begin = parse_uint(val);
+            if (current_device.address_begin > 65536) {
+                log_error("Address End too large %d at %s:%d", current_device.address_begin, path, line_number);
+                exit(1);
+            }
         } else if (strcmp(key, "address_end") == 0) {
             current_device.address_end = parse_uint(val);
+            if (current_device.address_end > 65536) {
+                log_error("Address End too large %d at %s:%d", current_device.address_end, path, line_number);
+                exit(1);
+            }
         } else if (strcmp(key, "path") == 0 && current_device.type == DEV_ROM) {
             char *str = parse_string(val);
             if (!str || access(str, F_OK) != 0) {
@@ -218,7 +240,7 @@ void free_parcer_dev_arr(PARCER_DEVICE *arr) {
 
 void print_parcer_dev_arr(PARCER_DEVICE *arr) {
     for (size_t i = 0;; i++) {
-        printf("DEV_TYPE = %d, Address_Begin = %d, Address_End = %d", arr[i].type, arr[i].address_begin, arr[i].address_end);
+        printf("DEV_TYPE = %d, Address_Begin = %ld, Address_End = %ld", arr[i].type, arr[i].address_begin, arr[i].address_end);
         if (arr[i].type == DEV_ROM) {
             printf(", Path = \"%s\"", arr[i].dev_opts.rom_opts.path);
         }

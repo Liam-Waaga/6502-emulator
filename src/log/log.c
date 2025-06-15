@@ -18,7 +18,7 @@ extern SYSTEM_FLAGS flags;
 
 void log_info(const char *message, ...) {
     
-    if (flags.loglevel < 2) {
+    if (flags.loglevel < LOG_INFO) {
         return;
     }
 
@@ -40,7 +40,7 @@ void log_info(const char *message, ...) {
 
 
 void log_warn(const char *message, ...) {
-    if (flags.loglevel < 1) {
+    if (flags.loglevel < LOG_WARN) {
         return;
     }
 
@@ -62,7 +62,7 @@ void log_warn(const char *message, ...) {
 
 void log_error(const char *message, ...) {
     
-    if (flags.loglevel < 0) {
+    if (flags.loglevel < LOG_ERROR) {
         return;
     }
 

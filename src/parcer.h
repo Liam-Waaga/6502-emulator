@@ -15,8 +15,8 @@
 /* used as part of an array */
 typedef struct {
     DEV_TYPE type;
-    Word_t address_begin;
-    Word_t address_end;
+    size_t address_begin;
+    size_t address_end;
     union {
         struct ROM_OPTS rom_opts;
         

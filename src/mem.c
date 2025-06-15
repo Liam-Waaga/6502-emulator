@@ -15,6 +15,7 @@
 
 #include <stddef.h>
 #include <stdlib.h>
+#include <stdio.h>
 
 extern SYSTEM_FLAGS flags;
 
@@ -24,7 +25,7 @@ ADDR_SPACE *addr_init(PARCER_DEVICE *device_arr) {
     addr_space->dev_count = 0;
     addr_space->dev_allocated = 1;
 
-    for (size_t i = 0; !device_arr[i].isArrayEnd; i++) {
+    for (size_t i = 0; ; i++) {
         DEVICE dev;
         dev.address_begin = device_arr[i].address_begin;
         dev.address_end = device_arr[i].address_end;
@@ -42,7 +43,8 @@ ADDR_SPACE *addr_init(PARCER_DEVICE *device_arr) {
                 break;
         }
         if (addr_space->dev_allocated == addr_space->dev_count) {
-            DEVICE *tmp = (DEVICE *) realloc(addr_space->devices, addr_space->dev_allocated *= 2);
+            addr_space->dev_allocated *= 2;
+            DEVICE *tmp = (DEVICE *) realloc(addr_space->devices, addr_space->dev_allocated * sizeof(DEVICE));
             if (tmp == NULL) {
                 log_error("realloc failure at %s:%d", __FILE__, __LINE__);
                 exit(1);
@@ -50,6 +52,7 @@ ADDR_SPACE *addr_init(PARCER_DEVICE *device_arr) {
             addr_space->devices = tmp;
         }
         addr_space->devices[addr_space->dev_count++] = dev;
+        if (!device_arr[i].isArrayEnd) break;
     }
 
     return addr_space;
@@ -110,21 +113,21 @@ void addr_deinit(ADDR_SPACE *address_space) {
 
 
 Word_t vm_read_word(ADDR_SPACE *vm, Word_t address) {
-    return (Word_t) vm_read_byte(vm, address) | (vm_read_byte(vm, address) << 8);
+    return (Word_t) vm_read_byte(vm, address) | (vm_read_byte(vm, address + 1) << 8);
 }
 
 Byte_t vm_read_byte(ADDR_SPACE *vm, Word_t address) {
     DEVICE *dev = NULL;
+    printf("%ld\n", vm->dev_count);
     for (size_t i = 0; i < vm->dev_count; i++) {
-        if (address >= vm->devices[i].address_begin &&
-            address < vm->devices[i].address_end) {
+        if (address >= vm->devices[i].address_begin && address < vm->devices[i].address_end) {
             dev = &vm->devices[i];
         }
     }
 
     if (dev == NULL) {
-        log_error("Tried to access memory address %d, but found no device asscodiated with it", address);
-        exit(1);        
+        log_error("Tried to access memory address %d, but found no device ascociated with it", address);
+        exit(1);
     }
 
     switch (dev->type) {
@@ -135,7 +138,7 @@ Byte_t vm_read_byte(ADDR_SPACE *vm, Word_t address) {
             return ram_read_byte(dev->device.ram, address - dev->address_begin);
             break;
         case DEV_NONE:
-            log_warn("Device accessed of type DEV_NONE, returning x00");
+            log_warn("Device accessed of type DEV_NONE, returning 0x00");
             return 0x00;            
         default:
             log_error("Device accessed of unknown type (%d)", dev->type);
@@ -154,13 +157,13 @@ void vm_write_byte(ADDR_SPACE *vm, Word_t address, Byte_t value) {
     }
 
     if (dev == NULL) {
-        log_error("Tried to access memory address %d, but found no device asscodiated with it", address);
+        log_error("Tried to access memory address %d, but found no device ascociated with it", address);
         exit(1);        
     }
 
     switch (dev->type) {
         case DEV_ROM:
-            log_error("Tried to write to ROM at address %d", address);
+            log_warn("Tried to write to ROM at address %d", address);
             break;
         case DEV_RAM:
             ram_write_byte(dev->device.ram, address - dev->address_begin, value);

@@ -22,9 +22,17 @@ typedef uint16_t Word_t;
 typedef int8_t Byte_signed_t;
 typedef int16_t Word_signed_t;
 
+typedef enum {
+    LOG_NONE,
+    LOG_QUIET,
+    LOG_ERROR,
+    LOG_WARN,
+    LOG_INFO,
+} LOGLEVEL;
+
 typedef struct {
     unsigned long clock_speed; /* 0 for system clock */
-    int loglevel; /* 0 for error, 1 for warn, 2 for info */
+    LOGLEVEL loglevel;
 } SYSTEM_FLAGS;
 
 typedef enum {

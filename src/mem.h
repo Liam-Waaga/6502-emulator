@@ -22,8 +22,8 @@ typedef struct {
         RAM *ram;
         ROM *rom;
     } device;
-    Word_t address_begin;
-    Word_t address_end; /* not inclusive */
+    size_t address_begin;
+    size_t address_end; /* not inclusive */
     DEV_TYPE type;
 } DEVICE;
 
