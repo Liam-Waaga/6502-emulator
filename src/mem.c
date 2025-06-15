@@ -52,7 +52,7 @@ ADDR_SPACE *addr_init(PARCER_DEVICE *device_arr) {
             addr_space->devices = tmp;
         }
         addr_space->devices[addr_space->dev_count++] = dev;
-        if (!device_arr[i].isArrayEnd) break;
+        if (device_arr[i].isArrayEnd) break;
     }
 
     return addr_space;
@@ -76,7 +76,7 @@ void vm_register_device(ADDR_SPACE *address_space, DEVICE device) {
             address_space->devices = new_device;
         }
     }
-    address_space->devices[address_space->dev_count] = device;
+    address_space->devices[address_space->dev_count++] = device;
     log_info("Registered device");
 }
 
@@ -118,7 +118,7 @@ Word_t vm_read_word(ADDR_SPACE *vm, Word_t address) {
 
 Byte_t vm_read_byte(ADDR_SPACE *vm, Word_t address) {
     DEVICE *dev = NULL;
-    printf("%ld\n", vm->dev_count);
+
     for (size_t i = 0; i < vm->dev_count; i++) {
         if (address >= vm->devices[i].address_begin && address < vm->devices[i].address_end) {
             dev = &vm->devices[i];

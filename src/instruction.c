@@ -397,7 +397,7 @@ void execute_instruction(CPU *cpu, unsigned char opcode) {
         /* TODO, add the rest of the official instruction opcodes */
 
         default:
-            log_error("Opcode '%x' not found", opcode);
+            log_error("Opcode 0x%x not found", opcode);
             exit(1);
     }
 }
