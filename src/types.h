@@ -1,7 +1,7 @@
 /* 
  * GNU GPLv3 License - see LICENSE.md at project root for terms.
  * If for any reason this file has been separated from the license text,
- * see LICENSE.md file in the git repo at https://github.com/da-ostrich-king/6502-emulator/blob/main/LICENSE.md
+ * see LICENSE.md file in the git repo at https://github.com/Liam-Waaga/6502-emulator/blob/main/LICENSE.md
  */
 
 
@@ -23,11 +23,11 @@ typedef int8_t Byte_signed_t;
 typedef int16_t Word_signed_t;
 
 typedef enum {
-    LOG_NONE,
-    LOG_QUIET,
-    LOG_ERROR,
-    LOG_WARN,
-    LOG_INFO,
+    LOG_NONE = 0,
+    LOG_QUIET = 1,
+    LOG_ERROR = 2,
+    LOG_WARN = 3,
+    LOG_INFO = 4,
 } LOGLEVEL;
 
 typedef struct {
