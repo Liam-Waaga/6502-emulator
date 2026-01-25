@@ -4,6 +4,7 @@ add_library(
     devices
     ram.c
     rom.c
+    device.c
 )
 
 

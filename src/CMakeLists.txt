@@ -16,6 +16,5 @@ target_link_libraries(
 
 target_include_directories(
     6502
-    PRIVATE
-    ${CMAKE_CURRENT_SOURCE_DIR}
+    PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}
 )

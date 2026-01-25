@@ -1,6 +1,6 @@
 
 
-add_subdirectory(device)
+add_subdirectory(devices)
 
 add_library(
     vm
@@ -10,7 +10,7 @@ add_library(
 target_link_libraries(
     vm
     log
-    device
+    devices
 )
 
 target_include_directories(
