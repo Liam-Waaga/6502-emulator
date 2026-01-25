@@ -5,8 +5,14 @@ add_subdirectory(vm)
 
 add_executable(
     6502
-    main.c
+    main.cpp
 )
+
+set_target_properties(
+    6502
+    PROPERTIES LINKER_LANGUAGE CXX
+)
+
 
 target_link_libraries(
     6502

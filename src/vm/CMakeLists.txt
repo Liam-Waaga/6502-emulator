@@ -4,7 +4,12 @@ add_subdirectory(devices)
 
 add_library(
     vm
-    vm.c
+    vm.cpp
+)
+
+set_target_properties(
+    vm
+    PROPERTIES LINKER_LANGUAGE CXX
 )
 
 target_link_libraries(
@@ -17,3 +22,4 @@ target_include_directories(
     vm
     PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}
 )
+
