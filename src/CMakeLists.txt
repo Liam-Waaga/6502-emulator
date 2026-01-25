@@ -1,6 +1,7 @@
 
 
 add_subdirectory(log)
+add_subdirectory(vm)
 
 add_executable(
     6502

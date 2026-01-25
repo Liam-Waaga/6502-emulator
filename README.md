@@ -5,3 +5,6 @@ I am restarting the 6502 emulator because honestly I think I could do better aft
 ## OS Support
 
 Only supporting Linux for now because this is meant to be so I can learn C.
+
+## TODO
+- 
