@@ -8,10 +8,10 @@ add_executable(
     main.cpp
 )
 
-set_target_properties(
-    6502
-    PROPERTIES LINKER_LANGUAGE CXX
-)
+# set_target_properties(
+#     6502
+#     PROPERTIES LINKER_LANGUAGE CXX
+# )
 
 
 target_link_libraries(

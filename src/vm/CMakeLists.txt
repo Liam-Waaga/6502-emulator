@@ -7,10 +7,10 @@ add_library(
     vm.cpp
 )
 
-set_target_properties(
-    vm
-    PROPERTIES LINKER_LANGUAGE CXX
-)
+# set_target_properties(
+#     vm
+#     PROPERTIES LINKER_LANGUAGE CXX
+# )
 
 target_link_libraries(
     vm

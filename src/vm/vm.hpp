@@ -1,8 +1,8 @@
 #pragma once
 
 
-#include "common.hpp"
-#include "device.hpp"
+#include "devices/common.hpp"
+#include "devices/device.hpp"
 #include <vector>
 
 
