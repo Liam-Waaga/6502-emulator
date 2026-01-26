@@ -1,5 +1,5 @@
-#include "log/log.h"
+#include "log.h"
 
 int main() {
-    log(INFO, "This is a test %d %s", 42, "yuppy");
+    logf(INFO, "This is a test %d %s", 42, "yuppy");
 }
