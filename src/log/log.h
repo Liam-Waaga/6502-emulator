@@ -9,7 +9,7 @@ extern "C" {
 
 /* this is the log macro. use it like this `logf(ERROR, "failed to malloc array at address %d", somearr);`*/
 #define logf(loglevel, format, ...) _log(__FILE__, __LINE__, __func__, loglevel, format, __VA_ARGS__)
-#define log(loglevel, format) _log(__FILE__, __LINE__, __func__, loglevel, format)
+#define log(loglevel, format) _log(__FILE__, __LINE__, __PRETTY_FUNCTION__, loglevel, format)
 
 typedef enum {
     INFO,

@@ -7,7 +7,7 @@ class RAM : Device {
     RAM(Word begin_address, Word end_address);
     ~RAM();
     
-    Byte read_byte(Word address);
+    Byte read_byte(Word address) const;
 
     void write_byte(Word address, Byte value);
 

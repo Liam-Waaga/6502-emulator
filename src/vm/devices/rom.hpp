@@ -11,7 +11,7 @@ class ROM : Device {
     ROM(Word begin_address, Word end_address, unsigned offset, std::filesystem::path file);
     ~ROM();
     
-    Byte read_byte(Word address);
+    Byte read_byte(Word address) const;
     
     void write_byte(Word address, Byte value);
 

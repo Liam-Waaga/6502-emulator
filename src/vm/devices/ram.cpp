@@ -23,7 +23,7 @@ RAM::~RAM() {
     std::free(this->_mem);
 }
 
-Byte RAM::read_byte(Word address) {
+Byte RAM::read_byte(Word address) const {
     if (address < get_begin_address() && address >= get_end_address()) {
         this->_error |= INDEX_OUT_OF_RANGE;
         logf(

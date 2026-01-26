@@ -25,7 +25,7 @@ ROM::ROM(Word begin_address, Word end_address, unsigned offset, std::filesystem:
     this->_filemap_length = file_length;
 
     /* set the addresses*/
-    set_addresses(begin_address, begin_address + file_length);
+    set_addresses(begin_address, end_address);
 
     /* open the file */
     this->_file_fd = open(file.c_str(), O_RDONLY);
@@ -39,17 +39,21 @@ ROM::ROM(Word begin_address, Word end_address, unsigned offset, std::filesystem:
     this->_filemap = (Byte *) mmap(nullptr, file_length, PROT_READ, MAP_PRIVATE, this->_file_fd, 0);
 
     /* offset checking */
-    if (offset >= file_length) {
-        logf(WARN, "Offset (%d) for file \"%s\" is more than file length (%d)", offset, file.c_str(), file_length);
+    if (offset + end_address >= file_length) {
+        logf(WARN, "Offset (%d) for file \"%s\" (%d bytes) may overflow, setting to 0", offset, file.c_str(), file_length);
         offset = 0;
     }
     logf(INFO, "Registered offset %d for \"%s\"", offset, file.c_str());
     this->_offset = offset;
+    if (offset + end_address >= file_length) {
+        logf(ERROR, "End address (%d) for file \"%s\" (%d bytes) may overflow, unable to continue", end_address, file.c_str(), file_length);
+        std::exit(1);
+    }
 
     if (this->_filemap == (Byte *) -1) {
         this->_error |= MMAP_FAILED;
         logf(ERROR, "Failed to mmap \"%s\" at fd %d with length %d", file.c_str(), this->_file_fd, file_length);
-        exit(1);
+        std::exit(1);
     }
 }
 
