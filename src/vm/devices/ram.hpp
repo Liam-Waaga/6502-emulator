@@ -8,12 +8,10 @@ class RAM : Device {
     ~RAM();
     
     Byte read_byte(Word address);
-    Word read_word(Word address);
-
 
     void write_byte(Word address, Byte value);
-    void write_word(Word address, Word value);
+
 
     private:
-    void *_mem;
+    Byte *_mem;
 };

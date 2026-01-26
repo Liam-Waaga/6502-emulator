@@ -3,8 +3,9 @@
 #define LOG_H
 
 
-/* this is the log macro. use it like this `log(ERROR, "failed to malloc array at address %d", somearr);`*/
-#define log(loglevel, format, ...) _log(__FILE__, __LINE__, __func__, loglevel, format, __VA_ARGS__)
+/* this is the log macro. use it like this `logf(ERROR, "failed to malloc array at address %d", somearr);`*/
+#define logf(loglevel, format, ...) _log(__FILE__, __LINE__, __func__, loglevel, format, __VA_ARGS__)
+#define log(loglevel, format) _log(__FILE__, __LINE__, __func__, loglevel, format)
 
 typedef enum {
     INFO,

@@ -1,22 +1,25 @@
 #pragma once
 
 #include "device.hpp"
+#include <cstddef>
 #include <filesystem>
 
 class ROM : Device {
     public:
-    /* end_address is infered from the files length */
-    ROM(Word begin_address, std::filesystem::path file);
+    /* end_address + offset must be less than the file length */
+    /* offset is offset from the beginning of the file, 0 means no offset*/
+    ROM(Word begin_address, Word end_address, unsigned offset, std::filesystem::path file);
     ~ROM();
     
     Byte read_byte(Word address);
-    Word read_word(Word address);
-
-
+    
     void write_byte(Word address, Byte value);
-    void write_word(Word address, Word value);
+
 
     private:
-    void *_filemap;
+    int _offset;
+    int _file_fd;
+    std::size_t _filemap_length;
+    Byte *_filemap;
 
 };
