@@ -1,5 +1,6 @@
 #pragma once
-#include "device.hpp"
+
+#include "vm/devices/device.hpp"
 
 
 class RAM : Device {

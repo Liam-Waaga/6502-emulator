@@ -1,7 +1,7 @@
 #pragma once
 
 
-#include "devices/common.hpp"
+#include "common/common.hpp"
 #include "devices/device.hpp"
 #include <vector>
 

@@ -11,10 +11,5 @@ target_link_libraries(
     vm
     log
     devices
+    common
 )
-
-target_include_directories(
-    vm
-    PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}
-)
-

@@ -1,9 +1,9 @@
 
 
-#include "ram.hpp"
-#include "common.hpp"
-#include "device.hpp"
-#include "log.h"
+#include "vm/devices/ram.hpp"
+#include "common/common.hpp"
+#include "vm/devices/device.hpp"
+#include "log/log.h"
 
 
 #include <cstdlib>

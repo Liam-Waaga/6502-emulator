@@ -1,8 +1,8 @@
 
-#include "rom.hpp"
-#include "log.h"
-#include "common.hpp"
-#include "device.hpp"
+#include "vm/devices/rom.hpp"
+#include "log/log.h"
+#include "common/common.hpp"
+#include "vm/devices/device.hpp"
 
 #include <sys/mman.h>
 #include <fcntl.h>

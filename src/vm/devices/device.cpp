@@ -1,5 +1,7 @@
-#include "device.hpp"
-#include "common.hpp"
+
+
+#include "vm/devices/device.hpp"
+#include "common/common.hpp"
 
 
 Device::Device() {
