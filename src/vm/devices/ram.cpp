@@ -2,19 +2,17 @@
 
 #include "vm/devices/ram.hpp"
 #include "common/common.hpp"
-#include "vm/devices/device.hpp"
-#include "log/log.h"
 
 
-#include <cstdlib>
+#include <new>
+#include <stdexcept>
 
 RAM::RAM(Word begin_address, Word end_address)
     : _mem(nullptr) {
     set_addresses(begin_address, end_address);
     this->_mem = (Byte *) std::malloc(end_address - begin_address);
     if (!this->_mem) {
-        log(ERROR, "Malloc failed");
-        std::exit(1); /* no need to set _error because we just exit, leave it to the kernel to cleanup */
+        throw std::bad_alloc();
     }
 
 }
@@ -25,23 +23,14 @@ RAM::~RAM() {
 
 Byte RAM::read_byte(Word address) const {
     if (address < get_begin_address() && address >= get_end_address()) {
-        this->_error |= INDEX_OUT_OF_RANGE;
-        logf(
-            ERROR, "Index out of range. Wanted %d but must satisfy %d <= address < %d",
-            address, get_begin_address(), get_end_address()
-        );
-        return 0;
+        throw std::out_of_range("Index out of range");
     }
     return *(this->_mem + (address - this->get_begin_address()));
 }
 
 void RAM::write_byte(Word address, Byte value) {
     if (address < get_begin_address() && address >= get_end_address()) {
-        this->_error |= INDEX_OUT_OF_RANGE;
-        logf(
-            ERROR, "Index out of range. Wanted %d but must satisfy %d <= address < %d",
-            address, get_begin_address(), get_end_address()
-        );
+        throw std::out_of_range("Index out of range");
     } else {
         *(this->_mem + (address - this->get_begin_address())) = value;
     }

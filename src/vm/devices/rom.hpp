@@ -1,6 +1,7 @@
 #pragma once
 
 #include "vm/devices/device.hpp"
+#include "common/common.hpp"
 
 #include <cstddef>
 #include <filesystem>

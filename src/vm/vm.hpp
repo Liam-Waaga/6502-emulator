@@ -19,7 +19,7 @@ class VirtualMemory {
     
     void write_byte(Word address, Byte value);
     void write_word(Word address, Word value);
-
+    
     private:
     std::vector<Device> devices;
 };

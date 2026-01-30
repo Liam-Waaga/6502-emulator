@@ -2,6 +2,7 @@
 
 #include "vm/devices/device.hpp"
 #include "common/common.hpp"
+#include <stdexcept>
 
 
 Device::Device() {
@@ -11,7 +12,7 @@ Device::Device() {
 
 void Device::set_addresses(Word begin_address, Word end_address) {
     if (begin_address >= end_address) {
-        this->_error |= SET_BAD_ADDRESS;
+        throw std::out_of_range("Bad address");
     }
     this->_begin_address = begin_address;
     this->_end_address = end_address;

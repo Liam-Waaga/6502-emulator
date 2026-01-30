@@ -8,6 +8,4 @@ add_library(
 target_link_libraries(
     parser
     log
-    vm
-    common
 )
