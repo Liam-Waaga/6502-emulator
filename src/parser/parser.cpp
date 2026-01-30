@@ -3,7 +3,10 @@
 #include "parser/parser.hpp"
 #include "log/log.h"
 
+#include <fstream>
+#include <ios>
 #include <stdexcept>
+#include <string>
 
 
 
@@ -163,3 +166,11 @@ std::string INI_Parser::INI_Section::get_section_name() {
     return _section_name;
 }
 
+std::vector<INI_Parser::INI_Section> INI_Parser::ini_parse(std::filesystem::path ini_path) {
+    std::ifstream ini_file;
+    ini_file.open(ini_path, std::ios::ate);
+    char * file_mem = new char [ini_file.tellg()];
+    ini_file.read(file_mem, ini_file.tellg());
+    std::string file_string = std::string(file_mem);
+    return INI_Parser::ini_parse(file_string);
+}
