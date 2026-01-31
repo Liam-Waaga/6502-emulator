@@ -3,10 +3,12 @@
 #include "parser/parser.hpp"
 #include "log/log.h"
 
+#include <cstddef>
 #include <fstream>
 #include <ios>
 #include <stdexcept>
 #include <string>
+#include <vector>
 
 
 
@@ -173,4 +175,27 @@ std::vector<INI_Parser::INI_Section> INI_Parser::ini_parse(std::filesystem::path
     ini_file.read(file_mem, ini_file.tellg());
     std::string file_string = std::string(file_mem);
     return INI_Parser::ini_parse(file_string);
+}
+
+std::vector<INI_Parser::INI_Section> INI_Parser::ini_parse(std::string ini_source) {
+    ini_source += '\n';
+    std::vector<std::string> lines;
+    std::size_t i = 0;
+    std::size_t j;
+
+    while ((j = ini_source.find('\n', i))) {
+        lines.push_back(ini_source.substr(i, j - i));
+        i = ++j;
+    }
+
+    return INI_Parser::ini_parse(lines);
+}
+
+std::vector<INI_Parser::INI_Section> INI_Parser::ini_parse(std::vector<std::string> ini_source) {
+    std::size_t i = 0;
+    std::vector<INI_Parser::INI_Section> ini_data;
+    while (i != ini_source.size()) {
+        ini_data.emplace_back(ini_source, i, i == 0 ? true : false);
+    }
+    return ini_data;
 }
