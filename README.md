@@ -4,7 +4,7 @@ I am restarting the 6502 emulator because honestly I think I could do better aft
 
 ## OS Support
 
-Only supporting Linux for now because this is meant to be so I can learn C. *not anymore I was just writing C++ in C, and realized whenever I was making structs of function pointers for each struct so I just decided to make my life easier*.
+Only supporting Linux for now because this is meant to be so I can learn. This will not support Windows.
 
 ## INI Parser
 The INI parser is currently flawed, in that it assumes ASCII, and that it does very little validation that some values are sensible. IE it is currently possible to have the value for an INI field to have almost any ascii value, regardless of whether or not it is even a printable character.

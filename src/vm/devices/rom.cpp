@@ -4,9 +4,14 @@
 #include "common/common.hpp"
 
 #include <stdexcept>
+#include <filesystem>
+
 #include <sys/mman.h>
 #include <fcntl.h>
-#include <filesystem>
+
+#ifdef _WIN32
+#error "Windows not supported"
+#endif
 
 
 ROM::ROM(Word begin_address, Word end_address, unsigned offset, std::filesystem::path file) {
