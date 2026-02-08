@@ -1,14 +1,15 @@
 #pragma once
 
 
+#include "parser/parser.hpp"
 #include "vm/vm.hpp"
 
-#include <filesystem>
+#include <vector>
 
 class CPU {
 
     public:
-    CPU(std::filesystem::path config_file);
+    CPU(std::vector<INI_Parser::INI_Section> config);
     ~CPU();
 
     void start_execution_loop();
@@ -16,8 +17,7 @@ class CPU {
 
     private:
     void do_cycle();
-
-
+    bool check_for_interrupts();
 
 
     VirtualMemory vm;
