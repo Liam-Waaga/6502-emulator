@@ -8,6 +8,7 @@
 
 namespace INI_Parser {
 
+
     class INI_Field {
         
         public:
@@ -45,16 +46,18 @@ namespace INI_Parser {
         std::string _section_name;
     };
 
+    typedef std::vector<INI_Section> INI_Data;
+
     /* the following parse functions return the first INI_Field to be the global options */
     /* ie options declared without section header */
     /* and the section name is "" */
     
     /* accepts the *contents* of the ini as a single string, not a path */
-    std::vector<INI_Section> ini_parse(std::string ini_source);
+    INI_Data ini_parse(std::string ini_source);
 
     /* accepts the *contents* of the ini as a vector of strings, each value is a line, without newlines */
-    std::vector<INI_Section> ini_parse(std::vector<std::string> ini_source);
+    INI_Data ini_parse(std::vector<std::string> ini_source);
     
     /* accepts the path to the ini */
-    std::vector<INI_Section> ini_parse(std::filesystem::path ini_path);
+    INI_Data ini_parse(std::filesystem::path ini_path);
 }
