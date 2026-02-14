@@ -39,7 +39,7 @@ void parse_config(int argc, char ** argv) {
                 if (i + 1 < (std::size_t) argc) {
                     options.config_file = argv[++i];
                 } else {
-                    log(ERROR, "Argument '--config' requires argument");
+                    Logger::log(Logger::ERROR, "Argument '--config' requires argument");
                     printf("\n");
                     print_help();
                 }
@@ -56,18 +56,18 @@ int main(int argc, char ** argv) {
             auto parsed_config = INI_Parser::ini_parse(std::filesystem::path(options.config_file));
             CPU cpu = CPU(parsed_config);
 
-            log(INFO, "Starting execution loop");
+            Logger::log(Logger::INFO, "Starting execution loop");
             cpu.start_execution_loop();
-            log(INFO, "Execution loop stopped");
-            log(INFO, "Performing cleanup");
+            Logger::log(Logger::INFO, "Execution loop stopped");
+            Logger::log(Logger::INFO, "Performing cleanup");
 
             return 0;
         } else {
-            logf(ERROR, "Unable to find config file \'%s\'", options.config_file.c_str());
+            Logger::logf(Logger::ERROR, "Unable to find config file \'%s\'", options.config_file.c_str());
             return 1;
         }
     } catch (std::exception& e) {
-        logf(ERROR, "Uncaught exception \"%s\"", e.what());
+        Logger::logf(Logger::ERROR, "Uncaught exception \"%s\"", e.what());
         return 1;
     }
 }

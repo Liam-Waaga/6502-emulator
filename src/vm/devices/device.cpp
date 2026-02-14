@@ -26,10 +26,6 @@ Word Device::get_end_address() const {
     return this->_end_address;
 }
 
-int Device::get_error() const {
-    return this->_error;
-}
-
 bool Device::can_access_address(Word address) const {
     return address >= _begin_address && address < _end_address;
 }

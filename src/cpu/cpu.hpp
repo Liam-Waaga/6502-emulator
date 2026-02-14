@@ -121,6 +121,7 @@ class CPU {
     CPU_State _cpu_state;
     Interrupt _interrupt;
 
+    double _frequency;
 
     VirtualMemory _vm;
 };

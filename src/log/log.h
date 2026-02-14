@@ -3,6 +3,7 @@
 #define LOG_H
 
 #ifdef __cplusplus
+namespace Logger {
 extern "C" {
 #endif
 
@@ -24,7 +25,8 @@ void set_loglevel(LOGLEVEL level);
 void _log(char const * const file, int linenumber, char const * const function, LOGLEVEL level, char const * const format, ...);
 
 #ifdef __cplusplus
-}
+} /* extern "C" */
+} /* namespace Logger */
 #endif
 
 #endif

@@ -131,10 +131,10 @@ INI_Parser::INI_Section::INI_Section(std::vector<std::string> &lines, std::size_
         }
         std::string tmp = lines[current_line].substr(end + 1);
         if (!is_comment_or_empty(tmp))
-            logf(WARN, "Unkown text after section label at line %d, ignoring extra", current_line);
+            Logger::logf(Logger::WARN, "Unkown text after section label at line %d, ignoring extra", current_line);
         std::string name = lines[current_line].substr(1, end);
         if (name.size() == 0) throw std::runtime_error("Bad section name");
-    
+
         this->_section_name = name;
     } else {
         this->_section_name = "";
@@ -149,13 +149,13 @@ INI_Parser::INI_Section::INI_Section(std::vector<std::string> &lines, std::size_
             try {
                 _fields.push_back(INI_Parser::INI_Field(line));
             } catch (std::runtime_error e) {
-                logf(WARN, "Error \"%s\" in INI parsing at line %d. Ignoring line", e.what(), current_line + 1);
+                Logger::logf(Logger::WARN, "Error \"%s\" in INI parsing at line %d. Ignoring line", e.what(), current_line + 1);
             }
         }
     }
 }
 
-std::string INI_Parser::INI_Section::operator[](std::string field_name) {
+std::string INI_Parser::INI_Section::operator[](std::string field_name) const {
     for (auto field : _fields) {
         if (field.get_field() == field_name) {
             return field.get_value();
